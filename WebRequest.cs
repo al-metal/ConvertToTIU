@@ -67,8 +67,8 @@ namespace web
         {
             CookieContainer cooc = new CookieContainer();
             HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
-            req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-            req.UserAgent = "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
+            req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+            req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0";
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
             req.CookieContainer = cooc;
@@ -96,7 +96,7 @@ namespace web
         public string PostRequest(string nethouseTovar)
         {
             CookieContainer cookie = new CookieContainer();
-            cookie = webCookie(nethouseTovar);
+            cookie = webCookieBike18();
             string otv = null;
             do
             {
