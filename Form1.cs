@@ -23,7 +23,11 @@ namespace ConvertToTIU
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            Authorizacion();
+            string otv = null;
+            CookieContainer cookie = Authorizacion();
+            otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/index/5187992?status=0", cookie);
+            otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie);
+            otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/group_create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie);
         }
 
         public CookieContainer cookieURL(string url)
@@ -65,7 +69,7 @@ namespace ConvertToTIU
             return otv;
         }
 
-        public void Authorizacion()
+        public CookieContainer Authorizacion()
         {
             CookieContainer cookie = new CookieContainer();
 
@@ -103,13 +107,14 @@ namespace ConvertToTIU
             req.Headers.Add("X-CSRFToken", toke);
             req.Headers.Add("Origin", "https://my.tiu.ru");
             req.CookieContainer = cookie;
-            //req.CookieContainer.Add(cCol);
             byte[] ms = Encoding.ASCII.GetBytes("phone_email=moto%40bike18.ru&password=TIURU12345&csrf_token=" + toke + "&_save=YES&");
             req.ContentLength = ms.Length;
             Stream stre = req.GetRequestStream();
             stre.Write(ms, 0, ms.Length);
             stre.Close();
             res = (HttpWebResponse)req.GetResponse();
+
+            return cookie;
         }
     }
 }
