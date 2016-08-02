@@ -154,6 +154,7 @@ namespace web
             req.Headers.Add("X-CSRFToken", toke);
             req.Headers.Add("Origin", "https://my.tiu.ru");
             req.CookieContainer = cookie;
+            Inquiry = Uri.EscapeUriString(Inquiry);
             byte[] ms = Encoding.UTF8.GetBytes(Inquiry);
             req.ContentLength = ms.Length;
             Stream stre = req.GetRequestStream();
