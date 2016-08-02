@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using web;
@@ -16,56 +17,106 @@ namespace ConvertToTIU
 {
     public partial class Form1 : Form
     {
+        string otv = null;
         web.WebRequest webRequest = new web.WebRequest();
         public Form1()
         {
             InitializeComponent();
+            
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            string otv = null;
-            
             CookieContainer cookie = Authorizacion();
             string token = tokenReturn(cookie);
             otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/index/5187992?status=0", cookie);
             otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie);
-            
-
             otv = webRequest.getRequest("http://bike18.ru/");
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
+
             for (int i = 0; globalCategory.Count > i; i++)
             {
-                otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/group_create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie);
-                MatchCollection listGroupTovarsTIU = new Regex("(?<=<option  value=\").*?(?=</option>)").Matches(otv);
-                for(int z = 0; listGroupTovarsTIU.Count > z; z++)
+                string strNameGlobalCategory = nameGlobalCategory[i].ToString();
+                addGroupInTIU(strNameGlobalCategory, cookie, token);
+                otv = webRequest.getRequest(globalCategory[i].ToString());
+                MatchCollection podCategoryURL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
+                MatchCollection namePodCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
+                if(podCategoryURL.Count != 0)
                 {
-                    bool b = false;
-                    int t = 0;
-                    while(t < listGroupTovarsTIU.Count)
+                    string strUpCategory = "1 " + strNameGlobalCategory;
+                    for(int n = 0; podCategoryURL.Count > n; n++)
                     {
-                        if (nameGlobalCategory[i].ToString().Contains(listGroupTovarsTIU[t].ToString()))
-                        {
-                            b = true;
-                        }
-                        t++;
-                    }
-                    
-                    if (!b)
-                    {
-                        string inquiry = "csrf_token=" + token + "&user_id=2269119&group-next=https://my.tiu.ru/cabinet/product2/index/5187992?status=0&group-parent_group=13525258&group-name=1 " + nameGlobalCategory[i].ToString() + "&group-selling_type=1&group-description=&group-group_seo_text=&group-managers=66604&group-use_default_seo_settings=1&group-submit_button=Сохранить группу&save_=1";
-                        otv = webRequest.PostRequest("https://my.tiu.ru/cabinet/product2/group_create", cookie, token, inquiry);
-
+                        strNameGlobalCategory = namePodCategory[n].ToString();
+                        addPodGroupInTIU(strNameGlobalCategory, cookie, token, strUpCategory);
                     }
                 }
-
-                otv = webRequest.getRequest(globalCategory.ToString());
-
             }
 
             
         }
+
+        private void addGroupInTIU(string strNameGlobalCategory, CookieContainer cookie, string token)
+        {
+            Thread.Sleep(10000);
+            bool b = false;
+            otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/group_create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie);
+            MatchCollection listGroupTovarsTIU = new Regex("(?<=<option  value=\").*?(?=</option>)").Matches(otv);
+            for (int z = 0; listGroupTovarsTIU.Count > z; z++)
+            {
+                string strListGroupTovars = listGroupTovarsTIU[z].ToString();
+                if (strListGroupTovars.Contains("1 " + strNameGlobalCategory))
+                {
+                    b = true;
+                    break;
+                }
+            }
+
+            if (!b)
+            {
+                string inquiry = "csrf_token=" + token + "&user_id=2269119&group-next=https://my.tiu.ru/cabinet/product2/index/5187992?status=0&group-parent_group=13525258&group-name=1 " + strNameGlobalCategory + "&group-selling_type=1&group-description=&group-group_seo_text=&group-managers=66604&group-use_default_seo_settings=1&group-submit_button=Сохранить группу&save_=1";
+                otv = webRequest.PostRequest("https://my.tiu.ru/cabinet/product2/group_create", cookie, token, inquiry);
+
+            }
+        }
+
+        private void addPodGroupInTIU(string strNameGlobalCategory, CookieContainer cookie, string token, string strUpCategory)
+        {
+            Thread.Sleep(5000);
+            bool b = false;
+            string codeGroupTIU = null;
+            string subsection = null;
+            otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/group_create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie);
+            MatchCollection listGroupTovarsTIU = new Regex("(?<=<option  value=\").*?(?=</option>)").Matches(otv);
+            for (int z = 0; listGroupTovarsTIU.Count > z; z++)
+            {
+                codeGroupTIU = new Regex(".*?(?=\">)").Match(listGroupTovarsTIU[z].ToString()).ToString();
+                string strListGroupTovars = listGroupTovarsTIU[z].ToString();
+                if (strListGroupTovars.Contains(strUpCategory))
+                {
+                    subsection = strUpCategory;
+                    break;
+                }
+            }
+            for (int z = 0; listGroupTovarsTIU.Count > z; z++)
+            {
+                string strListGroupTovars = listGroupTovarsTIU[z].ToString();
+                if (strListGroupTovars.Contains("1 " + strNameGlobalCategory))
+                {
+                    b = true;
+                    break;
+                }
+            }
+
+            if (!b)
+            {
+                Thread.Sleep(10000);
+                string inquiry = "csrf_token=" + token + "&user_id=2269119&group-next=https://my.tiu.ru/cabinet/product2/index/5187992?status=0&group-parent_group=" + codeGroupTIU + "&group-name=1 " + strNameGlobalCategory + "&group-selling_type=1&group-description=&group-group_seo_text=&group-managers=66604&group-use_default_seo_settings=1&group-submit_button=Сохранить группу&save_=1";
+                otv = webRequest.PostRequest("https://my.tiu.ru/cabinet/product2/group_create", cookie, token, inquiry);
+
+            }
+        }
+
         public CookieContainer cookieURL(string url)
         {
             CookieContainer cookie = new CookieContainer();
