@@ -39,51 +39,50 @@ namespace ConvertToTIU
             {
                 string strNameGlobalCategory = nameGlobalCategory[i].ToString();
                 addGroupInTIU(strNameGlobalCategory, cookie, token);
+
                 otv = webRequest.getRequest(globalCategory[i].ToString());
                 MatchCollection podCategoryURL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
-                MatchCollection namePodCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
+                MatchCollection podCategoryName = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
                 if(podCategoryURL.Count != 0)
                 {
                     string strUpCategory = "1 " + strNameGlobalCategory;
                     for(int n = 0; podCategoryURL.Count > n; n++)
                     {
-                        strNameGlobalCategory = namePodCategory[n].ToString();
-                        addPodGroupInTIU(strNameGlobalCategory, cookie, token, strUpCategory);
+                        string thisCategory = podCategoryName[n].ToString();
+                        addPodGroupInTIU(thisCategory, cookie, token, strUpCategory);
 
                         otv = webRequest.getRequest(podCategoryURL[n].ToString());
                         MatchCollection subPodCategoryURL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
-                        MatchCollection nameSubPodCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
+                        MatchCollection subPodCategoryName = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
                         if(subPodCategoryURL.Count != 0)
                         {
-                            
                             for (int z = 0; subPodCategoryURL.Count > z; z++)
                             {
-                                string subStrUpCategory = "1 " + namePodCategory[n].ToString();
-                                string strNameSubPodCategory = nameSubPodCategory[z].ToString();
-                                addPodGroupInTIU(strNameSubPodCategory, cookie, token, subStrUpCategory);
+                                string subStrUpCategory = "1 " + podCategoryName[n].ToString();
+                                thisCategory = subPodCategoryName[z].ToString();
+                                addPodGroupInTIU(thisCategory, cookie, token, subStrUpCategory);
 
                                 otv = webRequest.getRequest(subPodCategoryURL[z].ToString());
                                 MatchCollection subSubPodCategoryURL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
-                                MatchCollection nameSubSubPodCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
+                                MatchCollection subSubPodCategoryName = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
                                 if (subSubPodCategoryURL.Count != 0)
                                 {
                                     for (int x = 0; subSubPodCategoryURL.Count > x; x++)
                                     {
-                                        string subsubStrUpCategory = "1 " + subSubPodCategoryURL[z].ToString();
-                                        string strsubNameSubPodCategory = nameSubSubPodCategory[x].ToString();
-                                        addPodGroupInTIU(strsubNameSubPodCategory, cookie, token, subsubStrUpCategory);
-
+                                        string subsubStrUpCategory = "1 " + subPodCategoryName[z].ToString();
+                                        thisCategory = subSubPodCategoryName[x].ToString();
+                                        addPodGroupInTIU(thisCategory, cookie, token, subsubStrUpCategory);
 
                                         otv = webRequest.getRequest(subSubPodCategoryURL[x].ToString());
                                         MatchCollection subSubPodCategoryURL2 = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
-                                        MatchCollection nameSubSubPodCategory2 = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
-                                        if (subPodCategoryURL.Count != 0)
+                                        MatchCollection subSubPodCategoryName2 = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
+                                        if (subSubPodCategoryURL2.Count != 0)
                                         {
-                                            for (int c = 0; subPodCategoryURL.Count > c; c++)
+                                            for (int c = 0; subSubPodCategoryURL2.Count > c; c++)
                                             {
-                                                string subsubStrUpCategory2 = "1 " + namePodCategory[x].ToString();
-                                                string strsubNameSubPodCategory2 = nameSubPodCategory[c].ToString();
-                                                addPodGroupInTIU(strsubNameSubPodCategory2, cookie, token, subsubStrUpCategory2);
+                                                string subsubStrUpCategory2 = "1 " + subSubPodCategoryName[x].ToString();
+                                                thisCategory = subSubPodCategoryName2[c].ToString();
+                                                addPodGroupInTIU(thisCategory, cookie, token, subsubStrUpCategory2);
 
                                             }
                                         }
