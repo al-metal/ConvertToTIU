@@ -164,6 +164,56 @@ namespace web
             return otv;
         }
 
+        public string PostRequestaddTovarTIU(string url, CookieContainer cookie, string toke, string Inquiry)
+        {
+            string otv = null;
+            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
+            req.Accept = "application/json, text/javascript, */*; q=0.01";
+            req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
+            req.Method = "POST";
+            req.Referer = "https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0";
+            req.ContentType = "application/x-www-form-urlencoded";
+            req.Headers.Add("X-CSRFToken", toke);
+            req.Headers.Add("X-PromUserID", "2269119");
+            req.Headers.Add("Origin", "https://my.tiu.ru");
+            req.CookieContainer = cookie;
+            Inquiry = Uri.EscapeUriString(Inquiry);
+            byte[] ms = Encoding.UTF8.GetBytes(Inquiry);
+            req.ContentLength = ms.Length;
+            Stream stre = req.GetRequestStream();
+            stre.Write(ms, 0, ms.Length);
+            stre.Close();
+            HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+            return otv;
+        }
+
+        public string PostRequestaddTovarTIUImage(string url, CookieContainer cookie, string toke, string Inquiry, string nameImg)
+        {
+            string otv = null;
+            HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
+            req.Accept = "application/json, text/javascript, */*; q=0.01";
+            req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
+            req.Method = "POST";
+            req.Referer = "https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0";
+            req.ContentType = "multipart/form-data; boundary=----WebKitFormBoundaryBEJupAZNoLqBlkbt";
+            req.Headers.Add("X-CSRFToken", toke);
+            req.Headers.Add("X-PromUserID", "2269119");
+            req.Headers.Add("Origin", "https://my.tiu.ru");
+            req.CookieContainer = cookie;
+            Inquiry = Uri.EscapeUriString(Inquiry);
+            byte[] pic = File.ReadAllBytes(nameImg);
+            byte[] ms = Encoding.UTF8.GetBytes(Inquiry);
+            byte[] end = Encoding.UTF8.GetBytes("\n------WebKitFormBoundaryBEJupAZNoLqBlkbt--\n");
+            req.ContentLength = ms.Length + pic.Length + end.Length;
+            Stream stre = req.GetRequestStream();
+            stre.Write(ms, 0, ms.Length);
+            stre.Write(pic, 0, pic.Length);
+            stre.Write(end, 0, end.Length);
+            stre.Close();
+            HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+            return otv;
+        }
+
         internal int price(double priceTovarRacerMotors, double discount)
         {
             priceTovarRacerMotors = priceTovarRacerMotors - (priceTovarRacerMotors * discount);

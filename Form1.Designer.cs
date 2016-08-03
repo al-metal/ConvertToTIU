@@ -50,6 +50,7 @@
             this.btn_loadTovars.TabIndex = 1;
             this.btn_loadTovars.Text = "Перенести товары";
             this.btn_loadTovars.UseVisualStyleBackColor = true;
+            this.btn_loadTovars.Click += new System.EventHandler(this.btn_loadTovars_Click);
             // 
             // Form1
             // 
