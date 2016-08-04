@@ -187,23 +187,24 @@ namespace web
             return otv;
         }
 
-        public string PostRequestaddTovarTIUImage(string url, CookieContainer cookie, string toke, string Inquiry, string nameImg)
+        public string PostRequestaddTovarTIUImage(string url, CookieContainer cookie, string toke, string nameImg)
         {
+            string[] ss = null;
             string otv = null;
             HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
             req.Accept = "application/json, text/javascript, */*; q=0.01";
             req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36";
             req.Method = "POST";
             req.Referer = "https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0";
-            req.ContentType = "multipart/form-data; boundary=----WebKitFormBoundaryBEJupAZNoLqBlkbt";
+            req.ContentType = "multipart/form-data; boundary=----WebKitFormBoundary6xQSdC1xfgFODwBz";
             req.Headers.Add("X-CSRFToken", toke);
             req.Headers.Add("X-PromUserID", "2269119");
             req.Headers.Add("Origin", "https://my.tiu.ru");
             req.CookieContainer = cookie;
-            Inquiry = Uri.EscapeUriString(Inquiry);
+            req.Referer = "https://my.tiu.ru/cabinet/product2/create?next=%2Fcabinet%2Fproduct2%2Froot_group";
             byte[] pic = File.ReadAllBytes(nameImg);
-            byte[] ms = Encoding.UTF8.GetBytes(Inquiry);
-            byte[] end = Encoding.UTF8.GetBytes("\n------WebKitFormBoundaryBEJupAZNoLqBlkbt--\n");
+            byte[] ms = Encoding.UTF8.GetBytes(File.ReadAllText("TemplateLoadImageStart.txt"));
+            byte[] end = Encoding.UTF8.GetBytes(File.ReadAllText("TemplateLoadImageEnd.txt"));
             req.ContentLength = ms.Length + pic.Length + end.Length;
             Stream stre = req.GetRequestStream();
             stre.Write(ms, 0, ms.Length);
