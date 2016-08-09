@@ -99,9 +99,305 @@ namespace ConvertToTIU
 
         private void btn_loadTovars_Click(object sender, EventArgs e)
         {
+            WebClient webClient = new WebClient();
             CookieContainer cookie = Authorizacion();
             string token = tokenReturn(cookie);
-            otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/index/5187992?status=0", cookie);
+            otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/create?next=%2Fcabinet%2Fproduct2%2Froot_group", cookie);
+            MatchCollection groups = new Regex("(?<=<option value=)[\\w\\W]*?(?=</option>)").Matches(otv);
+
+            otv = webRequest.getRequest("http://bike18.ru/");
+            MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
+            MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
+            string idGroupTIU = null;
+
+            for (int i = 0; globalCategory.Count > i; i++)
+            {
+                string categoryForTIU = "1 " + nameGlobalCategory[i].ToString();
+                otv = webRequest.getRequest(globalCategory[i].ToString());
+                MatchCollection podCategoryURL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
+                MatchCollection tovars = new Regex("(?<=<div class=\"product-link -text-center\"><a href=\").*?(?=\" >)").Matches(otv);
+                if(tovars.Count != 0)
+                {
+                    for(int t = 10; tovars.Count > t; t++)
+                    {
+                        Thread.Sleep(10000);
+
+
+                        //cookie = Authorizacion();
+                        //token = tokenReturn(cookie);
+                        //otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie);
+
+
+
+                        otv = webRequest.getRequest(tovars[t].ToString());
+                        int v = 0;
+                        foreach (Match str in groups)
+                        {
+                            
+                            if (groups[v].ToString().Contains(categoryForTIU))
+                            {
+                                string group = groups[v].ToString();
+                                idGroupTIU = new Regex("(?<=\").*?(?=\" data)").Match(group).ToString();
+                                break;
+                            }
+                            v++;
+                        }
+
+                        string urlImg = new Regex("(?<=\"><a href=\")http://i..*?(?=\")").Match(otv).ToString();
+                        List<string> tovar = webRequest.arraySaveimage(tovars[t].ToString());
+                        string name = tovar[4];
+                        string price = tovar[9];
+                        string articl = tovar[6];
+                        string nameImage = "pic\\" + articl + ".jpg";
+                        string miniText = tovar[7];
+                        string fullText = tovar[8];
+                        if(tovar[7].Contains("</a>"))
+                        {
+                            MatchCollection urls = new Regex("<a.*?</a>").Matches(tovar[7]);
+                            foreach(Match str in urls)
+                            {
+                                miniText = miniText.Replace(str.ToString(), "").Replace("&nbsp;", "");
+                            }
+                            MatchCollection ampers = new Regex("&.*?;").Matches(tovar[7]);
+                            foreach (Match str in ampers)
+                            {
+                                miniText = miniText.Replace(str.ToString(), "").Replace("&nbsp;", "").Replace(" style=\"text-align: justify;\"", "").Replace(" class=\"field-name\"", "").Replace(" class=\"value place\"", "").Replace(" class=\"value\"", "").Replace("<p><span></span></p><p><span></span></p><p><span></span></p><p><span>.</span></p></li></ul><p><br /></p>", "").Replace("<span style=\"font-weight: bold; font-weight: bold;\">", "").Replace("<p>", "").Replace("</p>", "").Replace("<p>", "").Replace("</span>", "").Replace("<span>", "").Replace("<br />", "").Replace("<li>", "").Replace("<ul>", "");
+                            }
+                        }
+                        if (tovar[8].Contains("</a>"))
+                        {
+                            MatchCollection urls = new Regex("<a.*?</a>").Matches(tovar[8]);
+                            foreach (Match str in urls)
+                            {
+                                fullText = fullText.Replace(str.ToString(), "").Replace("&nbsp;", "");
+                            }
+                            MatchCollection ampers = new Regex("&.*?;").Matches(tovar[8]);
+                            foreach (Match str in urls)
+                            {
+                                fullText = fullText.Replace(str.ToString(), "").Replace("&nbsp;", "").Replace(" style=\"text-align: justify;\"", "").Replace(" class=\"field-name\"", "").Replace(" class=\"value place\"", "").Replace(" class=\"value\"", "").Replace("<p><span></span></p><p><span></span></p><p><span></span></p><p><span>.</span></p></li></ul><p><br /></p>", "").Replace("<span style=\"font-weight: bold; font-weight: bold;\">", "").Replace("<p>", "").Replace("</p>", "").Replace("<p>", "").Replace("</span>", "").Replace("<span>", "").Replace("<br />", "").Replace("<li>", "").Replace("<ul>", "");
+                            }
+                        }
+                        fullText = fullText.Replace("&nbsp;", "").Replace(" style=\"text-align: justify;\"", "").Replace(" class=\"field-name\"", "").Replace(" class=\"value place\"", "").Replace(" class=\"value\"", "").Replace("<p><span></span></p><p><span></span></p><p><span></span></p><p><span>.</span></p></li></ul><p><br /></p>", "").Replace("<span style=\"font-weight: bold; font-weight: bold;\">", "").Replace("<p>", "").Replace("</p>", "").Replace("<p>", "").Replace("</span>", "").Replace("<span>", "").Replace("<br />", "").Replace("<li>", "").Replace("<ul>", "").Replace("</li>", "").Replace("</ul>", "");
+                        miniText = miniText.Replace("&nbsp;", "").Replace(" style=\"text-align: justify;\"", "").Replace(" class=\"field-name\"", "").Replace(" class=\"value place\"", "").Replace(" class=\"value\"", "").Replace("<p><span></span></p><p><span></span></p><p><span></span></p><p><span>.</span></p></li></ul><p><br /></p>", "").Replace("<span style=\"font-weight: bold; font-weight: bold;\">", "").Replace("<p>", "").Replace("</p>", "").Replace("<p>", "").Replace("</span>", "").Replace("<span>", "").Replace("<br />", "").Replace("<li>", "").Replace("<ul>", "").Replace("</li>", "").Replace("</ul>", "");
+                        if (urlImg != "")
+                        {
+                            webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
+                            webClient.DownloadFile(urlImg, "pic\\" + articl + ".jpg");
+                        }
+                            
+                        string[] template = File.ReadAllLines("TemplateLoadImageStart.txt");
+                        template[3] = token;
+                        template[84] = "Content-Disposition: form-data; name=\"images[]\"; filename=\"" + nameImage + "\"";
+                        File.WriteAllLines("TemplateLoadImageStart.txt", template);
+                        if(File.Exists(articl + ".jpg"))
+                            otv = webRequest.PostRequestaddTovarTIUImage("https://my.tiu.ru/media/upload_image?profile=0", cookie, token, articl + ".jpg");
+                        string imgId = new Regex("(?<=\"id\": ).*(?=, \"size)").Match(otv).ToString();
+                        string strQuery = strQueryReturn(token, name, price, articl, miniText, fullText, idGroupTIU, imgId);
+                        otv = webRequest.PostRequestaddTovarTIU("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie, token, strQuery);
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                }
+                else
+                {
+                    for(int t = 0; podCategoryURL.Count > t; t++)
+                    {
+                        otv = webRequest.getRequest(podCategoryURL[t].ToString());
+                        MatchCollection category2URL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
+                        tovars = new Regex("(?<=<div class=\"product-link -text-center\"><a href=\").*?(?=\" >)").Matches(otv);
+                        //-----------------------------------------
+                        if (tovars.Count != 0)
+                        {
+                            for (int z = 0; tovars.Count > z; z++)
+                            {
+                                Thread.Sleep(5000);
+                                otv = webRequest.getRequest(tovars[z].ToString());
+                                int v = 0;
+                                foreach (Match str in groups)
+                                {
+
+                                    if (groups[v].ToString().Contains(categoryForTIU))
+                                    {
+                                        string group = groups[v].ToString();
+                                        idGroupTIU = new Regex("(?<=\").*?(?=\" data)").Match(group).ToString();
+                                        break;
+                                    }
+                                    v++;
+                                }
+
+                                string urlImg = new Regex("(?<=\"><a href=\")http://i..*?(?=\")").Match(otv).ToString();
+                                List<string> tovar = webRequest.arraySaveimage(tovars[z].ToString());
+                                string name = tovar[4];
+                                string price = tovar[9];
+                                string articl = tovar[6];
+                                string nameImage = "pic\\" + articl + ".jpg";
+                                string miniText = tovar[7];
+                                string fullText = tovar[8];
+
+                                if (urlImg != "")
+                                {
+                                    webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
+                                    webClient.DownloadFile(urlImg, "pic\\" + articl + ".jpg");
+                                }
+
+                                string[] template = File.ReadAllLines("TemplateLoadImageStart.txt");
+                                template[3] = token;
+                                template[84] = "Content-Disposition: form-data; name=\"images[]\"; filename=\"" + nameImage + "\"";
+                                File.WriteAllLines("TemplateLoadImageStart.txt", template);
+
+                                otv = webRequest.PostRequestaddTovarTIUImage("https://my.tiu.ru/media/upload_image?profile=0", cookie, token, articl + ".jpg");
+                                string imgId = new Regex("(?<=\"id\": ).*(?=, \"size)").Match(otv).ToString();
+                                string strQuery = strQueryReturn(token, name, price, articl, miniText, fullText, idGroupTIU, imgId);
+                                otv = webRequest.PostRequestaddTovarTIU("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie, token, strQuery);
+                            }
+                        }
+                        else
+                        {
+                            for(int y = 0; category2URL.Count > y; y++)
+                            {
+                                otv = webRequest.getRequest(category2URL[y].ToString());
+                                MatchCollection category3URL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
+                                tovars = new Regex("(?<=<div class=\"product-link -text-center\"><a href=\").*?(?=\" >)").Matches(otv);
+
+                                if (tovars.Count != 0)
+                                {
+                                    for (int z = 0; tovars.Count > z; z++)
+                                    {
+                                        Thread.Sleep(5000);
+                                        otv = webRequest.getRequest(tovars[z].ToString());
+                                        int v = 0;
+                                        foreach (Match str in groups)
+                                        {
+
+                                            if (groups[v].ToString().Contains(categoryForTIU))
+                                            {
+                                                string group = groups[v].ToString();
+                                                idGroupTIU = new Regex("(?<=\").*?(?=\" data)").Match(group).ToString();
+                                                break;
+                                            }
+                                            v++;
+                                        }
+
+                                        string urlImg = new Regex("(?<=\"><a href=\")http://i..*?(?=\")").Match(otv).ToString();
+                                        List<string> tovar = webRequest.arraySaveimage(tovars[z].ToString());
+                                        string name = tovar[4];
+                                        string price = tovar[9];
+                                        string articl = tovar[6];
+                                        string nameImage = "pic\\" + articl + ".jpg";
+                                        string miniText = tovar[7];
+                                        string fullText = tovar[8];
+
+                                        if (urlImg != "")
+                                        {
+                                            webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
+                                            webClient.DownloadFile(urlImg, "pic\\" + articl + ".jpg");
+                                        }
+
+                                        string[] template = File.ReadAllLines("TemplateLoadImageStart.txt");
+                                        template[3] = token;
+                                        template[84] = "Content-Disposition: form-data; name=\"images[]\"; filename=\"" + nameImage + "\"";
+                                        File.WriteAllLines("TemplateLoadImageStart.txt", template);
+
+                                        otv = webRequest.PostRequestaddTovarTIUImage("https://my.tiu.ru/media/upload_image?profile=0", cookie, token, articl + ".jpg");
+                                        string imgId = new Regex("(?<=\"id\": ).*(?=, \"size)").Match(otv).ToString();
+                                        string strQuery = strQueryReturn(token, name, price, articl, miniText, fullText, idGroupTIU, imgId);
+                                        otv = webRequest.PostRequestaddTovarTIU("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie, token, strQuery);
+                                    }
+                                }
+                                else
+                                {
+                                    otv = webRequest.getRequest(category3URL[y].ToString());
+                                    MatchCollection category4URL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
+                                    tovars = new Regex("(?<=<div class=\"product-link -text-center\"><a href=\").*?(?=\" >)").Matches(otv);
+                                    if (tovars.Count != 0)
+                                    {
+                                        Thread.Sleep(5000);
+                                        for (int z = 0; tovars.Count > z; z++)
+                                        {
+                                            otv = webRequest.getRequest(tovars[z].ToString());
+                                            int v = 0;
+                                            foreach (Match str in groups)
+                                            {
+
+                                                if (groups[v].ToString().Contains(categoryForTIU))
+                                                {
+                                                    string group = groups[v].ToString();
+                                                    idGroupTIU = new Regex("(?<=\").*?(?=\" data)").Match(group).ToString();
+                                                    break;
+                                                }
+                                                v++;
+                                            }
+
+                                            string urlImg = new Regex("(?<=\"><a href=\")http://i..*?(?=\")").Match(otv).ToString();
+                                            List<string> tovar = webRequest.arraySaveimage(tovars[z].ToString());
+                                            string name = tovar[4];
+                                            string price = tovar[9];
+                                            string articl = tovar[6];
+                                            string nameImage = "pic\\" + articl + ".jpg";
+                                            string miniText = tovar[7];
+                                            string fullText = tovar[8];
+
+                                            if (urlImg != "")
+                                            {
+                                                webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
+                                                webClient.DownloadFile(urlImg, "pic\\" + articl + ".jpg");
+                                            }
+
+                                            string[] template = File.ReadAllLines("TemplateLoadImageStart.txt");
+                                            template[3] = token;
+                                            template[84] = "Content-Disposition: form-data; name=\"images[]\"; filename=\"" + nameImage + "\"";
+                                            File.WriteAllLines("TemplateLoadImageStart.txt", template);
+
+                                            otv = webRequest.PostRequestaddTovarTIUImage("https://my.tiu.ru/media/upload_image?profile=0", cookie, token, articl + ".jpg");
+                                            string imgId = new Regex("(?<=\"id\": ).*(?=, \"size)").Match(otv).ToString();
+                                            string strQuery = strQueryReturn(token, name, price, articl, miniText, fullText, idGroupTIU, imgId);
+                                            otv = webRequest.PostRequestaddTovarTIU("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie, token, strQuery);
+                                        }
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+                        //----------------------------------------------
+
+                    }
+
+                }
+
+            }
+
+
+
+
+
+
+
+
+
+
+                otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/index/5187992?status=0", cookie);
             otv = webRequest.getRequest("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie);
             string nameTovar = "Тестовый товар666  попытка";
             string groupTovar = "13729006";
@@ -110,12 +406,12 @@ namespace ConvertToTIU
             string DescriptionAttributeTovar = "Тестовый товар описание";
             string keywords = "Ключевые словики";
             
-            string stringloadImg = loadImg(token, nameTovar);
+            //string stringloadImg = loadImg(token, name);
 
-            string strQuery = strQueryReturn(token, nameTovar);
+            
 
-            otv = webRequest.PostRequestaddTovarTIUImage("https://my.tiu.ru/media/upload_image?profile=0", cookie, token, "8729512120.jpg");
-            otv = webRequest.PostRequestaddTovarTIU("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie, token, strQuery);
+            
+            
         }
 
         private void addGroupInTIU(string strNameGlobalCategory, CookieContainer cookie, string token)
@@ -256,7 +552,7 @@ namespace ConvertToTIU
             req.Headers.Add("X-CSRFToken", toke);
             req.Headers.Add("Origin", "https://my.tiu.ru");
             req.CookieContainer = cookie;
-            byte[] ms = Encoding.ASCII.GetBytes("phone_email=moto%40bike18.ru&password=TIURU12345&csrf_token=" + toke + "&_save=YES&");
+            byte[] ms = Encoding.ASCII.GetBytes("phone_email=moto%40bike18.ru&password=testTIU2016&csrf_token=" + toke + "&_save=YES&");
             req.ContentLength = ms.Length;
             Stream stre = req.GetRequestStream();
             stre.Write(ms, 0, ms.Length);
@@ -294,12 +590,10 @@ namespace ConvertToTIU
             return stringloadImg;
         }
 
-        public string strQueryReturn(string token, string nameTovar)
+        public string strQueryReturn(string token, string nameTovar, string price, string articl, string miniText, string fullText, string idGroupTIU, string imgId)
         {
-           string str = "csrf_token=" + token + "&user_id=2269119&next=%2Fcabinet%2Fproduct2%2Froot_group&model_id=&model_binding_source=&category=120302&name=" + nameTovar + "&group=13729006&selling_type=1&price=888&price_currency=4003&measure_unit=1000&presence=avail&sku=%D0%901231231&images=318858058&description=%D0%9E%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5&keywords=%D0%A1%D0%BB%D0%B2%D0%B0&keywords=%D0%A1%D0%BB%D0%B2%D0%B0&attributes_present=1&attributes_custom_present=1&attribute_18=&attribute_228=&attribute_11217=&attributes_custom-0-attribute_name=&attributes_custom-0-attribute_value=&attributes_custom-0-attribute_id=&attributes_custom-0-attribute_exists=y&attributes_custom-1-attribute_name=&attributes_custom-1-attribute_value=&attributes_custom-1-attribute_id=&attributes_custom-1-attribute_exists=y&attributes_custom-2-attribute_name=&attributes_custom-2-attribute_value=&attributes_custom-2-attribute_id=&attributes_custom-2-attribute_exists=y&attributes_custom-3-attribute_name=&attributes_custom-3-attribute_value=&attributes_custom-3-attribute_id=&attributes_custom-3-attribute_exists=y&attributes_custom-4-attribute_name=&attributes_custom-4-attribute_value=&attributes_custom-4-attribute_id=&attributes_custom-4-attribute_exists=y&attributes_custom-5-attribute_name=&attributes_custom-5-attribute_value=&attributes_custom-5-attribute_id=&attributes_custom-5-attribute_exists=y&attributes_custom-6-attribute_name=&attributes_custom-6-attribute_value=&attributes_custom-6-attribute_id=&attributes_custom-6-attribute_exists=y&attributes_custom-7-attribute_name=&attributes_custom-7-attribute_value=&attributes_custom-7-attribute_id=&attributes_custom-7-attribute_exists=y&attributes_custom-8-attribute_name=&attributes_custom-8-attribute_value=&attributes_custom-8-attribute_id=&attributes_custom-8-attribute_exists=y&attributes_custom-9-attribute_name=&attributes_custom-9-attribute_value=&attributes_custom-9-attribute_id=&attributes_custom-9-attribute_exists=y&attributes_custom-10-attribute_name=&attributes_custom-10-attribute_value=&attributes_custom-10-attribute_id=&attributes_custom-10-attribute_exists=y&attributes_custom-11-attribute_name=&attributes_custom-11-attribute_value=&attributes_custom-11-attribute_id=&attributes_custom-11-attribute_exists=y&attributes_custom-12-attribute_name=&attributes_custom-12-attribute_value=&attributes_custom-12-attribute_id=&attributes_custom-12-attribute_exists=y&attributes_custom-13-attribute_name=&attributes_custom-13-attribute_value=&attributes_custom-13-attribute_id=&attributes_custom-13-attribute_exists=y&attributes_custom-14-attribute_name=&attributes_custom-14-attribute_value=&attributes_custom-14-attribute_id=&attributes_custom-14-attribute_exists=y&attributes_custom-15-attribute_name=&attributes_custom-15-attribute_value=&attributes_custom-15-attribute_id=&attributes_custom-15-attribute_exists=y&attributes_custom-16-attribute_name=&attributes_custom-16-attribute_value=&attributes_custom-16-attribute_id=&attributes_custom-16-attribute_exists=y&attributes_custom-17-attribute_name=&attributes_custom-17-attribute_value=&attributes_custom-17-attribute_id=&attributes_custom-17-attribute_exists=y&attributes_custom-18-attribute_name=&attributes_custom-18-attribute_value=&attributes_custom-18-attribute_id=&attributes_custom-18-attribute_exists=y&attributes_custom-19-attribute_name=&attributes_custom-19-attribute_value=&attributes_custom-19-attribute_id=&attributes_custom-19-attribute_exists=y&attributes_custom-20-attribute_name=&attributes_custom-20-attribute_value=&attributes_custom-20-attribute_id=&attributes_custom-20-attribute_exists=y&attributes_custom-21-attribute_name=&attributes_custom-21-attribute_value=&attributes_custom-21-attribute_id=&attributes_custom-21-attribute_exists=y&attributes_custom-22-attribute_name=&attributes_custom-22-attribute_value=&attributes_custom-22-attribute_id=&attributes_custom-22-attribute_exists=y&attributes_custom-23-attribute_name=&attributes_custom-23-attribute_value=&attributes_custom-23-attribute_id=&attributes_custom-23-attribute_exists=y&attributes_custom-24-attribute_name=&attributes_custom-24-attribute_value=&attributes_custom-24-attribute_id=&attributes_custom-24-attribute_exists=y&attributes_custom-25-attribute_name=&attributes_custom-25-attribute_value=&attributes_custom-25-attribute_id=&attributes_custom-25-attribute_exists=y&attributes_custom-26-attribute_name=&attributes_custom-26-attribute_value=&attributes_custom-26-attribute_id=&attributes_custom-26-attribute_exists=y&attributes_custom-27-attribute_name=&attributes_custom-27-attribute_value=&attributes_custom-27-attribute_id=&attributes_custom-27-attribute_exists=y&attributes_custom-28-attribute_name=&attributes_custom-28-attribute_value=&attributes_custom-28-attribute_id=&attributes_custom-28-attribute_exists=y&attributes_custom-29-attribute_name=&attributes_custom-29-attribute_value=&attributes_custom-29-attribute_id=&attributes_custom-29-attribute_exists=y&attributes_custom-30-attribute_name=&attributes_custom-30-attribute_value=&attributes_custom-30-attribute_id=&attributes_custom-30-attribute_exists=y&attributes_custom-31-attribute_name=&attributes_custom-31-attribute_value=&attributes_custom-31-attribute_id=&attributes_custom-31-attribute_exists=y&attributes_custom-32-attribute_name=&attributes_custom-32-attribute_value=&attributes_custom-32-attribute_id=&attributes_custom-32-attribute_exists=y&attributes_custom-33-attribute_name=&attributes_custom-33-attribute_value=&attributes_custom-33-attribute_id=&attributes_custom-33-attribute_exists=y&attributes_custom-34-attribute_name=&attributes_custom-34-attribute_value=&attributes_custom-34-attribute_id=&attributes_custom-34-attribute_exists=y&attributes_custom-35-attribute_name=&attributes_custom-35-attribute_value=&attributes_custom-35-attribute_id=&attributes_custom-35-attribute_exists=y&attributes_custom-36-attribute_name=&attributes_custom-36-attribute_value=&attributes_custom-36-attribute_id=&attributes_custom-36-attribute_exists=y&attributes_custom-37-attribute_name=&attributes_custom-37-attribute_value=&attributes_custom-37-attribute_id=&attributes_custom-37-attribute_exists=y&attributes_custom-38-attribute_name=&attributes_custom-38-attribute_value=&attributes_custom-38-attribute_id=&attributes_custom-38-attribute_exists=y&attributes_custom-39-attribute_name=&attributes_custom-39-attribute_value=&attributes_custom-39-attribute_id=&attributes_custom-39-attribute_exists=y&attributes_custom-40-attribute_name=&attributes_custom-40-attribute_value=&attributes_custom-40-attribute_id=&attributes_custom-40-attribute_exists=y&attributes_custom-41-attribute_name=&attributes_custom-41-attribute_value=&attributes_custom-41-attribute_id=&attributes_custom-41-attribute_exists=y&attributes_custom-42-attribute_name=&attributes_custom-42-attribute_value=&attributes_custom-42-attribute_id=&attributes_custom-42-attribute_exists=y&attributes_custom-43-attribute_name=&attributes_custom-43-attribute_value=&attributes_custom-43-attribute_id=&attributes_custom-43-attribute_exists=y&attributes_custom-44-attribute_name=&attributes_custom-44-attribute_value=&attributes_custom-44-attribute_id=&attributes_custom-44-attribute_exists=y&attributes_custom-45-attribute_name=&attributes_custom-45-attribute_value=&attributes_custom-45-attribute_id=&attributes_custom-45-attribute_exists=y&attributes_custom-46-attribute_name=&attributes_custom-46-attribute_value=&attributes_custom-46-attribute_id=&attributes_custom-46-attribute_exists=y&attributes_custom-47-attribute_name=&attributes_custom-47-attribute_value=&attributes_custom-47-attribute_id=&attributes_custom-47-attribute_exists=y&attributes_custom-48-attribute_name=&attributes_custom-48-attribute_value=&attributes_custom-48-attribute_id=&attributes_custom-48-attribute_exists=y&attributes_custom-49-attribute_name=&attributes_custom-49-attribute_value=&attributes_custom-49-attribute_id=&attributes_custom-49-attribute_exists=y&attributes_custom-50-attribute_name=&attributes_custom-50-attribute_value=&attributes_custom-50-attribute_id=&attributes_custom-50-attribute_exists=y&attributes_custom-51-attribute_name=&attributes_custom-51-attribute_value=&attributes_custom-51-attribute_id=&attributes_custom-51-attribute_exists=y&attributes_custom-52-attribute_name=&attributes_custom-52-attribute_value=&attributes_custom-52-attribute_id=&attributes_custom-52-attribute_exists=y&attributes_custom-53-attribute_name=&attributes_custom-53-attribute_value=&attributes_custom-53-attribute_id=&attributes_custom-53-attribute_exists=y&attributes_custom-54-attribute_name=&attributes_custom-54-attribute_value=&attributes_custom-54-attribute_id=&attributes_custom-54-attribute_exists=y&attributes_custom-55-attribute_name=&attributes_custom-55-attribute_value=&attributes_custom-55-attribute_id=&attributes_custom-55-attribute_exists=y&attributes_custom-56-attribute_name=&attributes_custom-56-attribute_value=&attributes_custom-56-attribute_id=&attributes_custom-56-attribute_exists=y&attributes_custom-57-attribute_name=&attributes_custom-57-attribute_value=&attributes_custom-57-attribute_id=&attributes_custom-57-attribute_exists=y&attributes_custom-58-attribute_name=&attributes_custom-58-attribute_value=&attributes_custom-58-attribute_id=&attributes_custom-58-attribute_exists=y&attributes_custom-59-attribute_name=&attributes_custom-59-attribute_value=&attributes_custom-59-attribute_id=&attributes_custom-59-attribute_exists=y&attributes_custom-60-attribute_name=&attributes_custom-60-attribute_value=&attributes_custom-60-attribute_id=&attributes_custom-60-attribute_exists=y&attributes_custom-61-attribute_name=&attributes_custom-61-attribute_value=&attributes_custom-61-attribute_id=&attributes_custom-61-attribute_exists=y&attributes_custom-62-attribute_name=&attributes_custom-62-attribute_value=&attributes_custom-62-attribute_id=&attributes_custom-62-attribute_exists=y&attributes_custom-63-attribute_name=&attributes_custom-63-attribute_value=&attributes_custom-63-attribute_id=&attributes_custom-63-attribute_exists=y&attributes_custom-64-attribute_name=&attributes_custom-64-attribute_value=&attributes_custom-64-attribute_id=&attributes_custom-64-attribute_exists=y&attributes_custom-65-attribute_name=&attributes_custom-65-attribute_value=&attributes_custom-65-attribute_id=&attributes_custom-65-attribute_exists=y&attributes_custom-66-attribute_name=&attributes_custom-66-attribute_value=&attributes_custom-66-attribute_id=&attributes_custom-66-attribute_exists=y&attributes_custom-67-attribute_name=&attributes_custom-67-attribute_value=&attributes_custom-67-attribute_id=&attributes_custom-67-attribute_exists=y&attributes_custom-68-attribute_name=&attributes_custom-68-attribute_value=&attributes_custom-68-attribute_id=&attributes_custom-68-attribute_exists=y&attributes_custom-69-attribute_name=&attributes_custom-69-attribute_value=&attributes_custom-69-attribute_id=&attributes_custom-69-attribute_exists=y&use_default_seo_settings=1&packaging=&ajax_create=true&status=0&redirect_to_list=true";
+           string str = "csrf_token=" + token + "&user_id=2269119&next=%2Fcabinet%2Fproduct2%2Froot_group&model_id=&model_binding_source=&category=120302&name=" + nameTovar + "&group=" + idGroupTIU + "&selling_type=1&price=" + price + "&price_currency=4003&measure_unit=1000&presence=avail&sku=" + articl + "&images=" + imgId + "&description=" + miniText + fullText + "&keywords=" + nameTovar + "&keywords=" + nameTovar + "&attributes_present=1&attributes_custom_present=1&attribute_18=&attribute_228=&attribute_11217=&attributes_custom-0-attribute_name=&attributes_custom-0-attribute_value=&attributes_custom-0-attribute_id=&attributes_custom-0-attribute_exists=y&attributes_custom-1-attribute_name=&attributes_custom-1-attribute_value=&attributes_custom-1-attribute_id=&attributes_custom-1-attribute_exists=y&attributes_custom-2-attribute_name=&attributes_custom-2-attribute_value=&attributes_custom-2-attribute_id=&attributes_custom-2-attribute_exists=y&attributes_custom-3-attribute_name=&attributes_custom-3-attribute_value=&attributes_custom-3-attribute_id=&attributes_custom-3-attribute_exists=y&attributes_custom-4-attribute_name=&attributes_custom-4-attribute_value=&attributes_custom-4-attribute_id=&attributes_custom-4-attribute_exists=y&attributes_custom-5-attribute_name=&attributes_custom-5-attribute_value=&attributes_custom-5-attribute_id=&attributes_custom-5-attribute_exists=y&attributes_custom-6-attribute_name=&attributes_custom-6-attribute_value=&attributes_custom-6-attribute_id=&attributes_custom-6-attribute_exists=y&attributes_custom-7-attribute_name=&attributes_custom-7-attribute_value=&attributes_custom-7-attribute_id=&attributes_custom-7-attribute_exists=y&attributes_custom-8-attribute_name=&attributes_custom-8-attribute_value=&attributes_custom-8-attribute_id=&attributes_custom-8-attribute_exists=y&attributes_custom-9-attribute_name=&attributes_custom-9-attribute_value=&attributes_custom-9-attribute_id=&attributes_custom-9-attribute_exists=y&attributes_custom-10-attribute_name=&attributes_custom-10-attribute_value=&attributes_custom-10-attribute_id=&attributes_custom-10-attribute_exists=y&attributes_custom-11-attribute_name=&attributes_custom-11-attribute_value=&attributes_custom-11-attribute_id=&attributes_custom-11-attribute_exists=y&attributes_custom-12-attribute_name=&attributes_custom-12-attribute_value=&attributes_custom-12-attribute_id=&attributes_custom-12-attribute_exists=y&attributes_custom-13-attribute_name=&attributes_custom-13-attribute_value=&attributes_custom-13-attribute_id=&attributes_custom-13-attribute_exists=y&attributes_custom-14-attribute_name=&attributes_custom-14-attribute_value=&attributes_custom-14-attribute_id=&attributes_custom-14-attribute_exists=y&attributes_custom-15-attribute_name=&attributes_custom-15-attribute_value=&attributes_custom-15-attribute_id=&attributes_custom-15-attribute_exists=y&attributes_custom-16-attribute_name=&attributes_custom-16-attribute_value=&attributes_custom-16-attribute_id=&attributes_custom-16-attribute_exists=y&attributes_custom-17-attribute_name=&attributes_custom-17-attribute_value=&attributes_custom-17-attribute_id=&attributes_custom-17-attribute_exists=y&attributes_custom-18-attribute_name=&attributes_custom-18-attribute_value=&attributes_custom-18-attribute_id=&attributes_custom-18-attribute_exists=y&attributes_custom-19-attribute_name=&attributes_custom-19-attribute_value=&attributes_custom-19-attribute_id=&attributes_custom-19-attribute_exists=y&attributes_custom-20-attribute_name=&attributes_custom-20-attribute_value=&attributes_custom-20-attribute_id=&attributes_custom-20-attribute_exists=y&attributes_custom-21-attribute_name=&attributes_custom-21-attribute_value=&attributes_custom-21-attribute_id=&attributes_custom-21-attribute_exists=y&attributes_custom-22-attribute_name=&attributes_custom-22-attribute_value=&attributes_custom-22-attribute_id=&attributes_custom-22-attribute_exists=y&attributes_custom-23-attribute_name=&attributes_custom-23-attribute_value=&attributes_custom-23-attribute_id=&attributes_custom-23-attribute_exists=y&attributes_custom-24-attribute_name=&attributes_custom-24-attribute_value=&attributes_custom-24-attribute_id=&attributes_custom-24-attribute_exists=y&attributes_custom-25-attribute_name=&attributes_custom-25-attribute_value=&attributes_custom-25-attribute_id=&attributes_custom-25-attribute_exists=y&attributes_custom-26-attribute_name=&attributes_custom-26-attribute_value=&attributes_custom-26-attribute_id=&attributes_custom-26-attribute_exists=y&attributes_custom-27-attribute_name=&attributes_custom-27-attribute_value=&attributes_custom-27-attribute_id=&attributes_custom-27-attribute_exists=y&attributes_custom-28-attribute_name=&attributes_custom-28-attribute_value=&attributes_custom-28-attribute_id=&attributes_custom-28-attribute_exists=y&attributes_custom-29-attribute_name=&attributes_custom-29-attribute_value=&attributes_custom-29-attribute_id=&attributes_custom-29-attribute_exists=y&attributes_custom-30-attribute_name=&attributes_custom-30-attribute_value=&attributes_custom-30-attribute_id=&attributes_custom-30-attribute_exists=y&attributes_custom-31-attribute_name=&attributes_custom-31-attribute_value=&attributes_custom-31-attribute_id=&attributes_custom-31-attribute_exists=y&attributes_custom-32-attribute_name=&attributes_custom-32-attribute_value=&attributes_custom-32-attribute_id=&attributes_custom-32-attribute_exists=y&attributes_custom-33-attribute_name=&attributes_custom-33-attribute_value=&attributes_custom-33-attribute_id=&attributes_custom-33-attribute_exists=y&attributes_custom-34-attribute_name=&attributes_custom-34-attribute_value=&attributes_custom-34-attribute_id=&attributes_custom-34-attribute_exists=y&attributes_custom-35-attribute_name=&attributes_custom-35-attribute_value=&attributes_custom-35-attribute_id=&attributes_custom-35-attribute_exists=y&attributes_custom-36-attribute_name=&attributes_custom-36-attribute_value=&attributes_custom-36-attribute_id=&attributes_custom-36-attribute_exists=y&attributes_custom-37-attribute_name=&attributes_custom-37-attribute_value=&attributes_custom-37-attribute_id=&attributes_custom-37-attribute_exists=y&attributes_custom-38-attribute_name=&attributes_custom-38-attribute_value=&attributes_custom-38-attribute_id=&attributes_custom-38-attribute_exists=y&attributes_custom-39-attribute_name=&attributes_custom-39-attribute_value=&attributes_custom-39-attribute_id=&attributes_custom-39-attribute_exists=y&attributes_custom-40-attribute_name=&attributes_custom-40-attribute_value=&attributes_custom-40-attribute_id=&attributes_custom-40-attribute_exists=y&attributes_custom-41-attribute_name=&attributes_custom-41-attribute_value=&attributes_custom-41-attribute_id=&attributes_custom-41-attribute_exists=y&attributes_custom-42-attribute_name=&attributes_custom-42-attribute_value=&attributes_custom-42-attribute_id=&attributes_custom-42-attribute_exists=y&attributes_custom-43-attribute_name=&attributes_custom-43-attribute_value=&attributes_custom-43-attribute_id=&attributes_custom-43-attribute_exists=y&attributes_custom-44-attribute_name=&attributes_custom-44-attribute_value=&attributes_custom-44-attribute_id=&attributes_custom-44-attribute_exists=y&attributes_custom-45-attribute_name=&attributes_custom-45-attribute_value=&attributes_custom-45-attribute_id=&attributes_custom-45-attribute_exists=y&attributes_custom-46-attribute_name=&attributes_custom-46-attribute_value=&attributes_custom-46-attribute_id=&attributes_custom-46-attribute_exists=y&attributes_custom-47-attribute_name=&attributes_custom-47-attribute_value=&attributes_custom-47-attribute_id=&attributes_custom-47-attribute_exists=y&attributes_custom-48-attribute_name=&attributes_custom-48-attribute_value=&attributes_custom-48-attribute_id=&attributes_custom-48-attribute_exists=y&attributes_custom-49-attribute_name=&attributes_custom-49-attribute_value=&attributes_custom-49-attribute_id=&attributes_custom-49-attribute_exists=y&attributes_custom-50-attribute_name=&attributes_custom-50-attribute_value=&attributes_custom-50-attribute_id=&attributes_custom-50-attribute_exists=y&attributes_custom-51-attribute_name=&attributes_custom-51-attribute_value=&attributes_custom-51-attribute_id=&attributes_custom-51-attribute_exists=y&attributes_custom-52-attribute_name=&attributes_custom-52-attribute_value=&attributes_custom-52-attribute_id=&attributes_custom-52-attribute_exists=y&attributes_custom-53-attribute_name=&attributes_custom-53-attribute_value=&attributes_custom-53-attribute_id=&attributes_custom-53-attribute_exists=y&attributes_custom-54-attribute_name=&attributes_custom-54-attribute_value=&attributes_custom-54-attribute_id=&attributes_custom-54-attribute_exists=y&attributes_custom-55-attribute_name=&attributes_custom-55-attribute_value=&attributes_custom-55-attribute_id=&attributes_custom-55-attribute_exists=y&attributes_custom-56-attribute_name=&attributes_custom-56-attribute_value=&attributes_custom-56-attribute_id=&attributes_custom-56-attribute_exists=y&attributes_custom-57-attribute_name=&attributes_custom-57-attribute_value=&attributes_custom-57-attribute_id=&attributes_custom-57-attribute_exists=y&attributes_custom-58-attribute_name=&attributes_custom-58-attribute_value=&attributes_custom-58-attribute_id=&attributes_custom-58-attribute_exists=y&attributes_custom-59-attribute_name=&attributes_custom-59-attribute_value=&attributes_custom-59-attribute_id=&attributes_custom-59-attribute_exists=y&attributes_custom-60-attribute_name=&attributes_custom-60-attribute_value=&attributes_custom-60-attribute_id=&attributes_custom-60-attribute_exists=y&attributes_custom-61-attribute_name=&attributes_custom-61-attribute_value=&attributes_custom-61-attribute_id=&attributes_custom-61-attribute_exists=y&attributes_custom-62-attribute_name=&attributes_custom-62-attribute_value=&attributes_custom-62-attribute_id=&attributes_custom-62-attribute_exists=y&attributes_custom-63-attribute_name=&attributes_custom-63-attribute_value=&attributes_custom-63-attribute_id=&attributes_custom-63-attribute_exists=y&attributes_custom-64-attribute_name=&attributes_custom-64-attribute_value=&attributes_custom-64-attribute_id=&attributes_custom-64-attribute_exists=y&attributes_custom-65-attribute_name=&attributes_custom-65-attribute_value=&attributes_custom-65-attribute_id=&attributes_custom-65-attribute_exists=y&attributes_custom-66-attribute_name=&attributes_custom-66-attribute_value=&attributes_custom-66-attribute_id=&attributes_custom-66-attribute_exists=y&attributes_custom-67-attribute_name=&attributes_custom-67-attribute_value=&attributes_custom-67-attribute_id=&attributes_custom-67-attribute_exists=y&attributes_custom-68-attribute_name=&attributes_custom-68-attribute_value=&attributes_custom-68-attribute_id=&attributes_custom-68-attribute_exists=y&attributes_custom-69-attribute_name=&attributes_custom-69-attribute_value=&attributes_custom-69-attribute_id=&attributes_custom-69-attribute_exists=y&use_default_seo_settings=1&packaging=&ajax_create=true&status=0&redirect_to_list=true";
             return str;
-        }
-
-        
+        }        
     }
 }

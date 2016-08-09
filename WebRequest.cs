@@ -72,7 +72,7 @@ namespace web
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
             req.CookieContainer = cooc;
-            byte[] ms = Encoding.ASCII.GetBytes("login=bike18.ru&password=BIKE182016nethouse&quick_expire=0&submit=%D0%92%D0%BE%D0%B9%D1%82%D0%B8");
+            byte[] ms = Encoding.ASCII.GetBytes("login=bike18.ru&password=nethouse182016Bike&quick_expire=0&submit=%D0%92%D0%BE%D0%B9%D1%82%D0%B8");
             req.ContentLength = ms.Length;
             Stream stre = req.GetRequestStream();
             stre.Write(ms, 0, ms.Length);
@@ -189,7 +189,7 @@ namespace web
 
         public string PostRequestaddTovarTIUImage(string url, CookieContainer cookie, string toke, string nameImg)
         {
-            string[] ss = null;
+            //string[] ss = null;
             string otv = null;
             HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(url);
             req.Accept = "application/json, text/javascript, */*; q=0.01";
@@ -202,7 +202,7 @@ namespace web
             req.Headers.Add("Origin", "https://my.tiu.ru");
             req.CookieContainer = cookie;
             req.Referer = "https://my.tiu.ru/cabinet/product2/create?next=%2Fcabinet%2Fproduct2%2Froot_group";
-            byte[] pic = File.ReadAllBytes(nameImg);
+            byte[] pic = File.ReadAllBytes("pic\\" + nameImg);
             byte[] ms = Encoding.UTF8.GetBytes(File.ReadAllText("TemplateLoadImageStart.txt"));
             byte[] end = Encoding.UTF8.GetBytes(File.ReadAllText("TemplateLoadImageEnd.txt"));
             req.ContentLength = ms.Length + pic.Length + end.Length;
@@ -212,6 +212,8 @@ namespace web
             stre.Write(end, 0, end.Length);
             stre.Close();
             HttpWebResponse res = (HttpWebResponse)req.GetResponse();
+            StreamReader ressr = new StreamReader(res.GetResponseStream(), Encoding.GetEncoding(1251));
+            otv = ressr.ReadToEnd();
             return otv;
         }
 
