@@ -162,7 +162,19 @@ namespace Bike18
                 {
                     string img = s.ToString();
                     img = img.Replace("\\/", "/").Replace("//", "/");
+                    if(img != "")
                     images = images + ";" + img;
+                }
+                if(images == "")
+                {
+                    imgs = new Regex("(?<=src\":\").*?(?=\")").Matches(allImages);
+                    foreach (Match s in imgs)
+                    {
+                        string img = s.ToString();
+                        img = img.Replace("\\/", "/").Replace("//", "/");
+                        if (img != "")
+                            images = images + ";" + img;
+                    }
                 }
                 /*allImages = new Regex("(?<=\"images\":{).*").Matches(otv);
                 if (allImages.Count != 0)
