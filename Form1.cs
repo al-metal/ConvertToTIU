@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 6; globalCategory.Count > i; i++)
+            for (int i = 17; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -242,7 +242,7 @@ namespace ConvertToTIU
             foreach (Match str in groups)
             {
                 string ss = groups[v].ToString();
-                if (ss.Contains("17245590"/*categoryForTIU*/))
+                if (ss.Contains("13012473"/*categoryForTIU*/))
                 {
                     string group = groups[v].ToString();
                     idGroupTIU = new Regex(".*?(?=\" data-path)").Match(group).ToString();
@@ -263,11 +263,6 @@ namespace ConvertToTIU
             string name = tovar[4];
             urlImg = tovar[32];
             urlImg = urlImg.Replace("\\/", "/");
-
-            if (name == "Скутер LB50QT-39 CYBER")
-            {
-
-            }
 
             MatchCollection ampers = new Regex("&.*?;").Matches(name);
             foreach (Match str in ampers)
@@ -317,6 +312,14 @@ namespace ConvertToTIU
                 }*/
 
             }
+            //miniText = miniText.Replace("rel=\"noopener noreferrer\"", "");
+            MatchCollection links = new Regex("(?<=<a).*?(?=>)").Matches(miniText);
+            foreach (Match ss in links)
+            {
+                string str = ss.ToString();
+                if (str.Contains("vk.com/bike18"))
+                    miniText = miniText.Replace(str, " href=\"https://vk.com/bike18\" target=\"_blank\"");
+            }
             string punkts = new Regex("(?<=<p>1. Нажмите).*<p>6.").Match(fullText).ToString();
             if (punkts != "")
                 fullText = fullText.Replace("&nbsp;", " ").Replace(punkts, "");
@@ -328,9 +331,10 @@ namespace ConvertToTIU
             if (punkts != "")
                 fullText = fullText.Replace("&nbsp;", " ").Replace(punkts, "");
             MatchCollection urlsMinitext = new Regex("<a.*?\">").Matches(miniText);
-            miniText = miniText.Replace("</a>", "");
+            //miniText = miniText.Replace("</a>", "");
             foreach (Match str in urlsMinitext)
             {
+                if(!str.ToString().Contains("vk.com/bike18"))
                 miniText = miniText.Replace(str.ToString(), "");
             }
             ampers = new Regex("&.*?;").Matches(tovar[7]);
@@ -649,7 +653,7 @@ namespace ConvertToTIU
 
         public string Replace(string str)
         {
-            str = str.Replace(";", "").Replace(":", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("MOTOLAND", "MotoLand").Replace("MotoLand", "MotoLand").Replace("S1", "s1").Replace("&", "");
+            str = str.Replace(";", "").Replace("(", "").Replace(")", "").Replace("-", "").Replace("MOTOLAND", "MotoLand").Replace("MotoLand", "MotoLand").Replace("S1", "s1").Replace("&", "");
             return str;
         }
 
