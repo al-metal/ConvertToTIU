@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 9; globalCategory.Count > i; i++)
+            for (int i = 6; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -230,9 +230,8 @@ namespace ConvertToTIU
         }
 
         private void CreateTovar(string urlTovar, string token, CookieContainer cookie, MatchCollection groups, string categoryForTIU)
-
         {
-                        if (countTovar == 10)
+            if (countTovar == 10)
             {
                 Thread.Sleep(40000);
                 countTovar = 0;
@@ -265,7 +264,7 @@ namespace ConvertToTIU
             urlImg = tovar[32];
             urlImg = urlImg.Replace("\\/", "/");
 
-            if(name == "Скутер LB50QT-39 CYBER")
+            if (name == "Скутер LB50QT-39 CYBER")
             {
 
             }
@@ -365,10 +364,10 @@ namespace ConvertToTIU
                 }
                 catch { }
             }*/
-            
+
             string imgId = "";
             string s = "";
-            for (int i = 0; 10> i; i++)
+            for (int i = 0; 10 > i; i++)
             {
                 string nameImage = "pic\\" + articl + "_" + i + ".jpg";
                 string[] template = File.ReadAllLines("TemplateLoadImageStart.txt");
@@ -444,8 +443,8 @@ namespace ConvertToTIU
                 webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36");
                 try
                 {
-                    if(url.Contains("i.siteapi.org"))
-                    webClient.DownloadFile("http:/" + url, "pic\\" + articl + "_" + i + ".jpg");
+                    if (url.Contains("i.siteapi.org"))
+                        webClient.DownloadFile("http:/" + url, "pic\\" + articl + "_" + i + ".jpg");
                     else
                         webClient.DownloadFile("https://bike18.ru" + url, "pic\\" + articl + "_" + i + ".jpg");
                 }
