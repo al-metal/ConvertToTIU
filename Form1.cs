@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 17; globalCategory.Count > i; i++)
+            for (int i = 13; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -142,8 +142,8 @@ namespace ConvertToTIU
                 {
                     for (int l = 0; podCategoryURL.Count > l; l++)
                     {
-                        categoryForTIU = "1 " + podCategoryName[l].ToString();
-                        otv = webRequest.getRequest(podCategoryURL[l].ToString() + "/page/all");
+                        categoryForTIU = /*"1 " + */podCategoryName[l].ToString();
+                        otv = webRequest.getRequest("https://bike18.ru" + podCategoryURL[l].ToString() + "?page=all");
                         MatchCollection category2Name = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div></div></div>)").Matches(otv);
                         MatchCollection category2URL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
                         tovars = new Regex("(?<=<div class=\"product-link -text-center\"><a href=\").*?(?=\" >)").Matches(otv);
@@ -151,7 +151,7 @@ namespace ConvertToTIU
                         {
                             for (int z = 0; tovars.Count > z; z++)
                             {
-                                Thread.Sleep(8000);
+                                Thread.Sleep(11000);
                                 CreateTovar(tovars[z].ToString(), token, cookie, groups, categoryForTIU);
                             }
                         }
@@ -250,12 +250,27 @@ namespace ConvertToTIU
                 }
                 v++;
             }
-            /* if(categoryForTIU == "1 Бампера и защита BRP")
-             idGroupTIU = "17765073";
-             else if (categoryForTIU == "1 Запчасти от BRP")
-                 idGroupTIU = "17765074";
-             else if (categoryForTIU == "1 Аксессуары от BRP")
-                 idGroupTIU = "17765075";*/
+            if(categoryForTIU == "Складные велосипеды")
+             idGroupTIU = "17245666";
+             else if (categoryForTIU == "Горные велосипеды")
+                 idGroupTIU = "17245667";
+            else if (categoryForTIU == "Городские велосипеды")
+                idGroupTIU = "17245668";
+            else if (categoryForTIU == "Туристические велосипеды")
+                idGroupTIU = "17245669";
+            else if (categoryForTIU == "Женские велосипеды")
+                idGroupTIU = "17245670";
+            else if (categoryForTIU == "Детские велосипеды")
+                idGroupTIU = "17245671";
+            else if (categoryForTIU == "Двухподвесные велосипеды")
+                idGroupTIU = "17245672";
+            else if (categoryForTIU == "Велосипеды FatBike (Фэтбайки)")
+                idGroupTIU = "17245673";
+            else if (categoryForTIU == "BMX")
+                idGroupTIU = "17956989";
+            else if (categoryForTIU == "Веломопеды")
+                idGroupTIU = "17956990";
+
             string urlImg = new Regex("(?<=class=\"avatar-view \"><link rel=\"image_src\" href=\").*?(?=\"><a href=\")").Match(otv).ToString();
             idGroupTIU = idGroupTIU.Replace("\"", "");
 
@@ -279,7 +294,10 @@ namespace ConvertToTIU
 
             string urlVK = new Regex("<span style=\"color: #ff0000;\">.*?</span>").Match(miniText).ToString();
             if (urlVK != "")
-                miniText = miniText.Replace(urlVK, "");
+            {
+
+            }
+                //miniText = miniText.Replace(urlVK, "");
 
             string emailBike18 = new Regex("Звоните!.*?moto@bike18.ru").Match(otv).ToString();
             if (emailBike18 != "")
