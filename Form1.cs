@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 13; globalCategory.Count > i; i++)
+            for (int i = 1; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -151,7 +151,7 @@ namespace ConvertToTIU
                         {
                             for (int z = 0; tovars.Count > z; z++)
                             {
-                                Thread.Sleep(11000);
+                                Thread.Sleep(15000);
                                 CreateTovar(tovars[z].ToString(), token, cookie, groups, categoryForTIU);
                             }
                         }
@@ -250,26 +250,8 @@ namespace ConvertToTIU
                 }
                 v++;
             }
-            if(categoryForTIU == "Складные велосипеды")
-             idGroupTIU = "17245666";
-             else if (categoryForTIU == "Горные велосипеды")
-                 idGroupTIU = "17245667";
-            else if (categoryForTIU == "Городские велосипеды")
-                idGroupTIU = "17245668";
-            else if (categoryForTIU == "Туристические велосипеды")
-                idGroupTIU = "17245669";
-            else if (categoryForTIU == "Женские велосипеды")
-                idGroupTIU = "17245670";
-            else if (categoryForTIU == "Детские велосипеды")
-                idGroupTIU = "17245671";
-            else if (categoryForTIU == "Двухподвесные велосипеды")
-                idGroupTIU = "17245672";
-            else if (categoryForTIU == "Велосипеды FatBike (Фэтбайки)")
-                idGroupTIU = "17245673";
-            else if (categoryForTIU == "BMX")
-                idGroupTIU = "17956989";
-            else if (categoryForTIU == "Веломопеды")
-                idGroupTIU = "17956990";
+
+            idGroupTIU = ReturnCategoryTovar(categoryForTIU);
 
             string urlImg = new Regex("(?<=class=\"avatar-view \"><link rel=\"image_src\" href=\").*?(?=\"><a href=\")").Match(otv).ToString();
             idGroupTIU = idGroupTIU.Replace("\"", "");
@@ -418,6 +400,87 @@ namespace ConvertToTIU
             //otv = nethouse.PostRequestaddTovarTIU("https://my.tiu.ru/cabinet/product2/create?parent_group=5187992&group=5187992&next=https%3A%2F%2Fmy.tiu.ru%2Fcabinet%2Fproduct2%2Findex%2F5187992%3Fstatus%3D0", cookie, token, strQuery);
             otv = nethouse.PostRequestaddTovarTIU("https://my.tiu.ru/cabinet/product2/create?next=%2Fcabinet%2Fproduct2%2Froot_group", cookie, token, strQuery);
             countTovar++;
+        }
+
+        private string ReturnCategoryTovar(string categoryForTIU)
+        {
+            string idGroupTIU = "";
+            if (categoryForTIU == "Складные велосипеды")
+                idGroupTIU = "17245666";
+            else if (categoryForTIU == "Горные велосипеды")
+                idGroupTIU = "17245667";
+            else if (categoryForTIU == "Городские велосипеды")
+                idGroupTIU = "17245668";
+            else if (categoryForTIU == "Туристические велосипеды")
+                idGroupTIU = "17245669";
+            else if (categoryForTIU == "Женские велосипеды")
+                idGroupTIU = "17245670";
+            else if (categoryForTIU == "Детские велосипеды")
+                idGroupTIU = "17245671";
+            else if (categoryForTIU == "Двухподвесные велосипеды")
+                idGroupTIU = "17245672";
+            else if (categoryForTIU == "Велосипеды FatBike (Фэтбайки)")
+                idGroupTIU = "17245673";
+            else if (categoryForTIU == "BMX")
+                idGroupTIU = "17956989";
+
+
+            else if (categoryForTIU == "Минитракторы")
+                idGroupTIU = "17957527";
+            else if (categoryForTIU == "Тракторы")
+                idGroupTIU = "17957528";
+            else if (categoryForTIU == "Мотоблоки и мотокультиваторы")
+                idGroupTIU = "17957531";
+            else if (categoryForTIU == "Плуги")
+                idGroupTIU = "17957533";
+            else if (categoryForTIU == "Почвофрезы")
+                idGroupTIU = "17957534";
+            else if (categoryForTIU == "Обработка почвы")
+                idGroupTIU = "17957535";
+            else if (categoryForTIU == "Картофелесажалки")
+                idGroupTIU = "17957537";
+            else if (categoryForTIU == "Картофелекопалки")
+                idGroupTIU = "17957538";
+            else if (categoryForTIU == "Сеялки")
+                idGroupTIU = "17957539";
+            else if (categoryForTIU == "Косилки")
+                idGroupTIU = "17957540";
+            else if (categoryForTIU == "Грабли")
+                idGroupTIU = "17957541";
+            else if (categoryForTIU == "Пресс-подборщики")
+                idGroupTIU = "17957542";
+            else if (categoryForTIU == "Рассадопосадочные машины")
+                idGroupTIU = "17957543";
+            else if (categoryForTIU == "Опрыскиватели")
+                idGroupTIU = "17957544";
+            else if (categoryForTIU == "Разбрасыватели минеральных удобрений")
+                idGroupTIU = "17957545";
+            else if (categoryForTIU == "Комбайны")
+                idGroupTIU = "17957546";
+            else if (categoryForTIU == "Ковши универсальные и фронтальные погрузчики для тракторов")
+                idGroupTIU = "17957548";
+            else if (categoryForTIU == "Экскаваторы навесные")
+                idGroupTIU = "17957550";
+            else if (categoryForTIU == "Отвалы, снегоуборщики (для трактора, мотоблока)")
+                idGroupTIU = "17957551";
+            else if (categoryForTIU == "Буры")
+                idGroupTIU = "17957552";
+            else if (categoryForTIU == "Доильный аппарат")
+                idGroupTIU = "17957553";
+            else if (categoryForTIU == "Разное")
+                idGroupTIU = "17957554";
+            else if (categoryForTIU == "Самоходные шасси")
+                idGroupTIU = "17957555";
+            else if (categoryForTIU == "Мотолебедки")
+                idGroupTIU = "17957557";
+            else if (categoryForTIU == "Генераторы и мотопомпы")
+                idGroupTIU = "17957558";
+            else if (categoryForTIU == "Прицепы для тракторов и мотоблоков")
+                idGroupTIU = "17957560";
+            else if (categoryForTIU == "Тяжёлая сельхозтехника")
+                idGroupTIU = "17957561";
+
+            return idGroupTIU;
         }
 
         private string UploadImagesTIU(string articl, string token)
