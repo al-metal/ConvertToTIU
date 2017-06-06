@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 1; globalCategory.Count > i; i++)
+            for (int i = 2; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -157,7 +157,7 @@ namespace ConvertToTIU
                         }
                         else
                         {
-                            for (int t = 2; category2URL.Count > t; t++)
+                            for (int t = 0; category2URL.Count > t; t++)
                             {
                                 categoryForTIU = "1 " + category2Name[t].ToString();
                                 otv = webRequest.getRequest(category2URL[t].ToString() + "/page/all");
@@ -479,6 +479,21 @@ namespace ConvertToTIU
                 idGroupTIU = "17957560";
             else if (categoryForTIU == "Тяжёлая сельхозтехника")
                 idGroupTIU = "17957561";
+
+            else if (categoryForTIU == "Дорожные новые")
+                idGroupTIU = "17245629";
+            else if (categoryForTIU == "Кроссовые новые")
+                idGroupTIU = "17245630";
+            else if (categoryForTIU == "Эндуро новые")
+                idGroupTIU = "17245631";
+            else if (categoryForTIU == "Мотард новые")
+                idGroupTIU = "17245632";
+            else if (categoryForTIU == "Спортивные новые")
+                idGroupTIU = "17245633";
+            else if (categoryForTIU == "Чопперы, круизеры новые")
+                idGroupTIU = "17245634";
+            else if (categoryForTIU == "Трициклы и грузовые мотоциклы")
+                idGroupTIU = "17245663";
 
             return idGroupTIU;
         }
