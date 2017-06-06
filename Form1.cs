@@ -143,6 +143,10 @@ namespace ConvertToTIU
                     for (int l = 0; podCategoryURL.Count > l; l++)
                     {
                         categoryForTIU = /*"1 " + */podCategoryName[l].ToString();
+
+                        if (categoryForTIU != "Дорожные новые" && categoryForTIU != "Кроссовые новые" && categoryForTIU != "Эндуро новые" && categoryForTIU != "Мотард новые" && categoryForTIU != "Спортивные новые" && categoryForTIU != "Чопперы, круизеры новые" && categoryForTIU != "Трициклы и грузовые мотоциклы")
+                            continue;
+
                         otv = webRequest.getRequest("https://bike18.ru" + podCategoryURL[l].ToString() + "?page=all");
                         MatchCollection category2Name = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div></div></div>)").Matches(otv);
                         MatchCollection category2URL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
