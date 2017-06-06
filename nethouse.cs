@@ -155,35 +155,27 @@ namespace Bike18
                 string filterstop = new Regex("(?<=\"top\":).*?(?=,)").Match(otv).Value;
                 string filtersright = new Regex("(?<=\"right\":).*?(?=,)").Match(otv).Value;
                 string filtersbottom = new Regex("(?<=\"bottom\":).*?(?=})").Match(otv).Value;
-                string allImages = new Regex("(?<=\"images\").*(?=\"documents\")").Match(otv).ToString();
+                
                 string images = "";
-                MatchCollection imgs = new Regex("(?<=\"raw\":\").*?(?=\")").Matches(allImages);
-                foreach(Match s in imgs)
-                {
-                    string img = s.ToString();
-                    img = img.Replace("\\/", "/").Replace("//", "/");
-                    if(img != "")
-                    images = images + ";" + img;
-                }
-                if(images == "")
-                {
-                    imgs = new Regex("(?<=src\":\").*?(?=\")").Matches(allImages);
-                    foreach (Match s in imgs)
-                    {
-                        string img = s.ToString();
-                        img = img.Replace("\\/", "/").Replace("//", "/");
-                        if (img != "")
-                            images = images + ";" + img;
-                    }
-                }
-                /*allImages = new Regex("(?<=\"images\":{).*").Matches(otv);
+
+                string avatarImages = new Regex("\"avatar\":{\"id\".*?(?=\"documents\")").Match(otv).ToString();
+                string avatar = new Regex("\"avatar\":{\"id\".*?(?=\"images\":)").Match(avatarImages).ToString();
+                if (avatar == "")
+                    avatar = new Regex("(?<=src\":\").*?(?=\")").Match(avatarImages).ToString();
+                else
+                    avatar = new Regex("(?<=src\":\").*?(?=\")").Match(avatar).ToString();
+
+                if (avatar == "")
+                    avatar = new Regex("(?<=\"raw\":\").*?(?=\")").Match(avatarImages).ToString();
+
+                avatar = avatar.Replace("\\/", "/").Replace("//", "/");
+                images = avatar + ";";
+
+                MatchCollection allImages = new Regex("(?<=:{\"id\":\").*?(?=format\\(png\\))").Matches(otv);
                 if (allImages.Count != 0)
                 {
-                    
-
                     foreach (Match img in allImages)
                     {
-                        string sa = allImages[0].ToString();
                         string str = img.ToString();
                         MatchCollection urlImg = new Regex("(?<=\"src\":\").*?(?=\",\")").Matches(str);
                         foreach (Match img2 in urlImg)
@@ -192,8 +184,9 @@ namespace Bike18
                             s = s.Replace("\\/", "/").Replace("//", "/");
                             images = images + ";" + s;
                         }
+
                     }
-                }*/
+                }
 
                 listTovar.Add(productId);       //0
                 listTovar.Add(slug);            //1
