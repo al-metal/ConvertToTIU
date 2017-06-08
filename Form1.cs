@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 12; globalCategory.Count > i; i++)
+            for (int i = 15; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -137,7 +137,7 @@ namespace ConvertToTIU
                         Thread.Sleep(15000);
                         CreateTovar(tovars[z].ToString(), token, cookie, groups, categoryForTIU);
                     }
-                }
+                }       
                 else
                 {
                     for (int l = 0; podCategoryURL.Count > l; l++)
@@ -570,6 +570,74 @@ namespace ConvertToTIU
                 idGroupTIU = "17971678";
             else if (categoryForTIU == "Катера")
                 idGroupTIU = "17971679";
+
+            else if (categoryForTIU == "Мотобуксировщики Мухтар (IRBIS)")
+                idGroupTIU = "17245683";
+            else if (categoryForTIU == "Мотобуксировщики Буксир и Север (Ижевск)")
+                idGroupTIU = "17245684";
+            else if (categoryForTIU == "Мотобуксировщики Север СК")
+                idGroupTIU = "17245685";
+            else if (categoryForTIU == "Мотобуксировщики Лидер")
+                idGroupTIU = "17245686";
+            else if (categoryForTIU == "Мотобуксировщики УРАГАН")
+                idGroupTIU = "17245687";
+            else if (categoryForTIU == "Мотобуксировщики Тофалар")
+                idGroupTIU = "17245688";
+            else if (categoryForTIU == "Мотобуксировщики БТС")
+                idGroupTIU = "17245689";
+            else if (categoryForTIU == "Мотобуксировщики Мужик")
+                idGroupTIU = "17245690";
+            else if (categoryForTIU == "Мотобуксировщики БАРС")
+                idGroupTIU = "17245691";
+            else if (categoryForTIU == "Мотобуксировщики Бурлак")
+                idGroupTIU = "17245692";
+            else if (categoryForTIU == "Мотобуксировщики Ahtar (Ахтар)")
+                idGroupTIU = "17245693";
+            else if (categoryForTIU == "Мотобуксировщики и мотособаки KOiRA")
+                idGroupTIU = "17245694";
+            else if (categoryForTIU == "Мотобуксировщик ЁРШ")
+                idGroupTIU = "17245695";
+            else if (categoryForTIU == "Мотобуксировщики Рекс")
+                idGroupTIU = "17245696";
+            else if (categoryForTIU == "Мотобуксировщики Помор")
+                idGroupTIU = "17245697";
+            else if (categoryForTIU == "Мотобуксировщики Норка")
+                idGroupTIU = "17245698";
+            else if (categoryForTIU == "Мотобуксировщики Альбатрос")
+                idGroupTIU = "17245699";
+            else if (categoryForTIU == "Мотобуксировщики Пахус (Paxus)")
+                idGroupTIU = "17245700";
+            else if (categoryForTIU == "Снегоходы и мотобуксировщики АВМ")
+                idGroupTIU = "17245701";
+            else if (categoryForTIU == "Мотобуксировщики и снегоболотоход завод им. В.А. Дегтерева")
+                idGroupTIU = "17245702";
+            else if (categoryForTIU == "Мотобуксировщики Rayda")
+                idGroupTIU = "17245703";
+            else if (categoryForTIU == "Мотобуксировщики ОНЕГО")
+                idGroupTIU = "17245704";
+            else if (categoryForTIU == "Мотобуксировщики BALTMOTORS")
+                idGroupTIU = "17245705";
+            else if (categoryForTIU == "Мотобуксировщики Волкодав")
+                idGroupTIU = "17245706";
+            else if (categoryForTIU == "Мотобуксировщики Xtreme-Motors")
+                idGroupTIU = "17245707";
+            else if (categoryForTIU == "Мотобуксировщики S2 Motors")
+                idGroupTIU = "17245708";
+            else if (categoryForTIU == "Мотобуксировщики FANTEK")
+                idGroupTIU = "17245709";
+            else if (categoryForTIU == "Всесезонные плавающие мотобуксировщики \"БК\" от РОСТИН")
+                idGroupTIU = "17245710";
+            else if (categoryForTIU == "Мотобуксировщики FORZA")
+                idGroupTIU = "17279387";
+            else if (categoryForTIU == "Мотобуксировщики Разгуляй")
+                idGroupTIU = "17975381";
+            else if (categoryForTIU == "Мотобуксировщики ЮКОН")
+                idGroupTIU = "17975382";
+
+            else
+            {
+
+            }
 
 
             return idGroupTIU;
