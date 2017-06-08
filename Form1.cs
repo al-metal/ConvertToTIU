@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 11; globalCategory.Count > i; i++)
+            for (int i = 12; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -518,6 +518,58 @@ namespace ConvertToTIU
             else if (categoryForTIU == "Вездеходы")
                 idGroupTIU = "17245591";
 
+            else if (categoryForTIU == "Алюминиевые лодки")
+                idGroupTIU = "17971672";
+            else if (categoryForTIU == "Стеклопластиковые лодки")
+                idGroupTIU = "17971674";
+            else if (categoryForTIU == "Моторно-гребные лодки ALFA")
+                idGroupTIU = "17973757";
+            else if (categoryForTIU == "Моторно-гребные лодки SIRIUS")
+                idGroupTIU = "17973758";
+            else if (categoryForTIU == "Надувные лодки Zongshen")
+                idGroupTIU = "17973759";
+            else if (categoryForTIU == "Лодки LAKER")
+                idGroupTIU = "17973760";
+            else if (categoryForTIU == "Моторно-гребные лодки COMPASS")
+                idGroupTIU = "17973761";
+            else if (categoryForTIU == "Моторные лодки повышенной мореходности PRO ultra")
+                idGroupTIU = "17973762";
+            else if (categoryForTIU == "Моторные лодки PRO")
+                idGroupTIU = "17973763";
+            else if (categoryForTIU == "Лодки Joker")
+                idGroupTIU = "17973764";
+            else if (categoryForTIU == "Лодка ПВХ SibRiver")
+                idGroupTIU = "17973765";
+            else if (categoryForTIU == "Лодки Инзер")
+                idGroupTIU = "17973766";
+            else if (categoryForTIU == "Лодки SEA-PRO")
+                idGroupTIU = "17973767";
+            else if (categoryForTIU == "Лодки Шкипер, Бриз, Пиранья")
+                idGroupTIU = "17973768";
+            else if (categoryForTIU == "Лодочные моторы Nissan Marine")
+                idGroupTIU = "17973769";
+            else if (categoryForTIU == "Моторы MARLIN")
+                idGroupTIU = "17973770";
+            else if (categoryForTIU == "Лодочные моторы SKIPPER")
+                idGroupTIU = "17973771";
+            else if (categoryForTIU == "Лодочные моторы HANGKAI")
+                idGroupTIU = "17973772";
+            else if (categoryForTIU == "Лодочные моторы Zongshen")
+                idGroupTIU = "17973773";
+            else if (categoryForTIU == "Лодочные моторы BREEZE")
+                idGroupTIU = "17973775";
+            else if (categoryForTIU == "Электрические лодочные моторы Haswing")
+                idGroupTIU = "17973776";
+            else if (categoryForTIU == "Лодочные моторы PATRIOT")
+                idGroupTIU = "17973777";
+            else if (categoryForTIU == "Лодочные моторы ООО «МТР Северо-Запад»")
+                idGroupTIU = "17973778";
+            else if (categoryForTIU == "Лодочные моторы MIKATSU")
+                idGroupTIU = "17973779";
+            else if (categoryForTIU == "Прицепы для катеров и лодок")
+                idGroupTIU = "17971678";
+            else if (categoryForTIU == "Катера")
+                idGroupTIU = "17971679";
 
 
             return idGroupTIU;
