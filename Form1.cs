@@ -144,8 +144,8 @@ namespace ConvertToTIU
                     {
                         categoryForTIU = /*"1 " + */podCategoryName[l].ToString();
 
-                        if (categoryForTIU != "Дорожные новые" && categoryForTIU != "Кроссовые новые" && categoryForTIU != "Эндуро новые" && categoryForTIU != "Мотард новые" && categoryForTIU != "Спортивные новые" && categoryForTIU != "Чопперы, круизеры новые" && categoryForTIU != "Трициклы и грузовые мотоциклы")
-                            continue;
+                        /*if (categoryForTIU != "Дорожные новые" && categoryForTIU != "Кроссовые новые" && categoryForTIU != "Эндуро новые" && categoryForTIU != "Мотард новые" && categoryForTIU != "Спортивные новые" && categoryForTIU != "Чопперы, круизеры новые" && categoryForTIU != "Трициклы и грузовые мотоциклы")
+                            continue;*/
 
                         otv = webRequest.getRequest("https://bike18.ru" + podCategoryURL[l].ToString() + "?page=all");
                         MatchCollection category2Name = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div></div></div>)").Matches(otv);
@@ -163,8 +163,8 @@ namespace ConvertToTIU
                         {
                             for (int t = 0; category2URL.Count > t; t++)
                             {
-                                categoryForTIU = "1 " + category2Name[t].ToString();
-                                otv = webRequest.getRequest(category2URL[t].ToString() + "/page/all");
+                                categoryForTIU = /*"1 " + */category2Name[t].ToString();
+                                otv = webRequest.getRequest("https://bike18.ru" + category2URL[t].ToString() + "?page=all");
                                 MatchCollection category3URL = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
                                 MatchCollection category3Name = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div></div></div>)").Matches(otv);
                                 tovars = new Regex("(?<=<div class=\"product-link -text-center\"><a href=\").*?(?=\" >)").Matches(otv);
@@ -173,7 +173,7 @@ namespace ConvertToTIU
 
                                     for (int z = 0; tovars.Count > z; z++)
                                     {
-                                        Thread.Sleep(8000);
+                                        Thread.Sleep(15000);
                                         CreateTovar(tovars[z].ToString(), token, cookie, groups, categoryForTIU);
                                     }
                                 }
