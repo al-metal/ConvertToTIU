@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 18; globalCategory.Count > i; i++)
+            for (int i = 13; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -137,15 +137,15 @@ namespace ConvertToTIU
                         Thread.Sleep(15000);
                         CreateTovar(tovars[z].ToString(), token, cookie, groups, categoryForTIU, i);
                     }
-                }       
+                }
                 else
                 {
                     for (int l = 0; podCategoryURL.Count > l; l++)
                     {
                         categoryForTIU = /*"1 " + */podCategoryName[l].ToString();
 
-                        if (categoryForTIU != "Снегоходы новые (Китай, Россия)" && categoryForTIU != "Снегоходы и аксессуары ALPINA SHERPA" && categoryForTIU != "Снегоходы Stels")
-                            continue;
+                        /*if (categoryForTIU != "Снегоходы новые (Китай, Россия)" && categoryForTIU != "Снегоходы и аксессуары ALPINA SHERPA" && categoryForTIU != "Снегоходы Stels")
+                            continue;*/
 
                         otv = webRequest.getRequest("https://bike18.ru" + podCategoryURL[l].ToString() + "?page=all");
                         MatchCollection category2Name = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div></div></div>)").Matches(otv);
@@ -283,7 +283,7 @@ namespace ConvertToTIU
             {
 
             }
-                //miniText = miniText.Replace(urlVK, "");
+            //miniText = miniText.Replace(urlVK, "");
 
             string emailBike18 = new Regex("Звоните!.*?moto@bike18.ru").Match(otv).ToString();
             if (emailBike18 != "")
@@ -338,8 +338,8 @@ namespace ConvertToTIU
             //miniText = miniText.Replace("</a>", "");
             foreach (Match str in urlsMinitext)
             {
-                if(!str.ToString().Contains("vk.com/bike18"))
-                miniText = miniText.Replace(str.ToString(), "");
+                if (!str.ToString().Contains("vk.com/bike18"))
+                    miniText = miniText.Replace(str.ToString(), "");
             }
             ampers = new Regex("&.*?;").Matches(tovar[7]);
             miniText = miniText.Replace("<span style=\"font-weight: bold; font-weight: bold; \">", "<strong>").Replace("</span>", "</strong>").Replace("<span style=\"color: #000000; font-weight: bold; font-weight: bold;\">", "<strong>");
@@ -414,6 +414,9 @@ namespace ConvertToTIU
             string idCategory = "";
             switch (countGlobalCategory)
             {
+                case 13:
+                    idCategory = "1204";
+                    break;
                 case 15:
                     idCategory = "120308";
                     break;
@@ -426,7 +429,7 @@ namespace ConvertToTIU
                 case 18:
                     idCategory = "203502";
                     break;
-                    
+
                 default:
                     idCategory = "120308";
                     break;
@@ -928,7 +931,7 @@ namespace ConvertToTIU
         }
 
         public string strQueryReturn(string token, string nameTovar, string price, string articl, string miniText, string fullText, string idGroupTIU, string imgId, string idCategory)
-            {
+        {
             string str = "csrf_token=" + token + "&user_id=2269119&next=%2Fcabinet%2Fproduct2%2Froot_group&model_id=&model_binding_source=&category=" + idCategory + "&name=" + nameTovar + "&group=" + idGroupTIU + "&selling_type=1&price=" + price + "&price_currency=4003&measure_unit=1000&presence=avail&sku=" + articl + "&images=" + imgId + "&description=" + miniText + fullText + "&keywords=" + nameTovar + "&keywords=" + nameTovar + "&attributes_present=1&attributes_custom_present=1&attribute_18=&attribute_228=&attribute_11217=&attributes_custom-0-attribute_name=&attributes_custom-0-attribute_value=&attributes_custom-0-attribute_id=&attributes_custom-0-attribute_exists=y&attributes_custom-1-attribute_name=&attributes_custom-1-attribute_value=&attributes_custom-1-attribute_id=&attributes_custom-1-attribute_exists=y&attributes_custom-2-attribute_name=&attributes_custom-2-attribute_value=&attributes_custom-2-attribute_id=&attributes_custom-2-attribute_exists=y&attributes_custom-3-attribute_name=&attributes_custom-3-attribute_value=&attributes_custom-3-attribute_id=&attributes_custom-3-attribute_exists=y&attributes_custom-4-attribute_name=&attributes_custom-4-attribute_value=&attributes_custom-4-attribute_id=&attributes_custom-4-attribute_exists=y&attributes_custom-5-attribute_name=&attributes_custom-5-attribute_value=&attributes_custom-5-attribute_id=&attributes_custom-5-attribute_exists=y&attributes_custom-6-attribute_name=&attributes_custom-6-attribute_value=&attributes_custom-6-attribute_id=&attributes_custom-6-attribute_exists=y&attributes_custom-7-attribute_name=&attributes_custom-7-attribute_value=&attributes_custom-7-attribute_id=&attributes_custom-7-attribute_exists=y&attributes_custom-8-attribute_name=&attributes_custom-8-attribute_value=&attributes_custom-8-attribute_id=&attributes_custom-8-attribute_exists=y&attributes_custom-9-attribute_name=&attributes_custom-9-attribute_value=&attributes_custom-9-attribute_id=&attributes_custom-9-attribute_exists=y&attributes_custom-10-attribute_name=&attributes_custom-10-attribute_value=&attributes_custom-10-attribute_id=&attributes_custom-10-attribute_exists=y&attributes_custom-11-attribute_name=&attributes_custom-11-attribute_value=&attributes_custom-11-attribute_id=&attributes_custom-11-attribute_exists=y&attributes_custom-12-attribute_name=&attributes_custom-12-attribute_value=&attributes_custom-12-attribute_id=&attributes_custom-12-attribute_exists=y&attributes_custom-13-attribute_name=&attributes_custom-13-attribute_value=&attributes_custom-13-attribute_id=&attributes_custom-13-attribute_exists=y&attributes_custom-14-attribute_name=&attributes_custom-14-attribute_value=&attributes_custom-14-attribute_id=&attributes_custom-14-attribute_exists=y&attributes_custom-15-attribute_name=&attributes_custom-15-attribute_value=&attributes_custom-15-attribute_id=&attributes_custom-15-attribute_exists=y&attributes_custom-16-attribute_name=&attributes_custom-16-attribute_value=&attributes_custom-16-attribute_id=&attributes_custom-16-attribute_exists=y&attributes_custom-17-attribute_name=&attributes_custom-17-attribute_value=&attributes_custom-17-attribute_id=&attributes_custom-17-attribute_exists=y&attributes_custom-18-attribute_name=&attributes_custom-18-attribute_value=&attributes_custom-18-attribute_id=&attributes_custom-18-attribute_exists=y&attributes_custom-19-attribute_name=&attributes_custom-19-attribute_value=&attributes_custom-19-attribute_id=&attributes_custom-19-attribute_exists=y&attributes_custom-20-attribute_name=&attributes_custom-20-attribute_value=&attributes_custom-20-attribute_id=&attributes_custom-20-attribute_exists=y&attributes_custom-21-attribute_name=&attributes_custom-21-attribute_value=&attributes_custom-21-attribute_id=&attributes_custom-21-attribute_exists=y&attributes_custom-22-attribute_name=&attributes_custom-22-attribute_value=&attributes_custom-22-attribute_id=&attributes_custom-22-attribute_exists=y&attributes_custom-23-attribute_name=&attributes_custom-23-attribute_value=&attributes_custom-23-attribute_id=&attributes_custom-23-attribute_exists=y&attributes_custom-24-attribute_name=&attributes_custom-24-attribute_value=&attributes_custom-24-attribute_id=&attributes_custom-24-attribute_exists=y&attributes_custom-25-attribute_name=&attributes_custom-25-attribute_value=&attributes_custom-25-attribute_id=&attributes_custom-25-attribute_exists=y&attributes_custom-26-attribute_name=&attributes_custom-26-attribute_value=&attributes_custom-26-attribute_id=&attributes_custom-26-attribute_exists=y&attributes_custom-27-attribute_name=&attributes_custom-27-attribute_value=&attributes_custom-27-attribute_id=&attributes_custom-27-attribute_exists=y&attributes_custom-28-attribute_name=&attributes_custom-28-attribute_value=&attributes_custom-28-attribute_id=&attributes_custom-28-attribute_exists=y&attributes_custom-29-attribute_name=&attributes_custom-29-attribute_value=&attributes_custom-29-attribute_id=&attributes_custom-29-attribute_exists=y&attributes_custom-30-attribute_name=&attributes_custom-30-attribute_value=&attributes_custom-30-attribute_id=&attributes_custom-30-attribute_exists=y&attributes_custom-31-attribute_name=&attributes_custom-31-attribute_value=&attributes_custom-31-attribute_id=&attributes_custom-31-attribute_exists=y&attributes_custom-32-attribute_name=&attributes_custom-32-attribute_value=&attributes_custom-32-attribute_id=&attributes_custom-32-attribute_exists=y&attributes_custom-33-attribute_name=&attributes_custom-33-attribute_value=&attributes_custom-33-attribute_id=&attributes_custom-33-attribute_exists=y&attributes_custom-34-attribute_name=&attributes_custom-34-attribute_value=&attributes_custom-34-attribute_id=&attributes_custom-34-attribute_exists=y&attributes_custom-35-attribute_name=&attributes_custom-35-attribute_value=&attributes_custom-35-attribute_id=&attributes_custom-35-attribute_exists=y&attributes_custom-36-attribute_name=&attributes_custom-36-attribute_value=&attributes_custom-36-attribute_id=&attributes_custom-36-attribute_exists=y&attributes_custom-37-attribute_name=&attributes_custom-37-attribute_value=&attributes_custom-37-attribute_id=&attributes_custom-37-attribute_exists=y&attributes_custom-38-attribute_name=&attributes_custom-38-attribute_value=&attributes_custom-38-attribute_id=&attributes_custom-38-attribute_exists=y&attributes_custom-39-attribute_name=&attributes_custom-39-attribute_value=&attributes_custom-39-attribute_id=&attributes_custom-39-attribute_exists=y&attributes_custom-40-attribute_name=&attributes_custom-40-attribute_value=&attributes_custom-40-attribute_id=&attributes_custom-40-attribute_exists=y&attributes_custom-41-attribute_name=&attributes_custom-41-attribute_value=&attributes_custom-41-attribute_id=&attributes_custom-41-attribute_exists=y&attributes_custom-42-attribute_name=&attributes_custom-42-attribute_value=&attributes_custom-42-attribute_id=&attributes_custom-42-attribute_exists=y&attributes_custom-43-attribute_name=&attributes_custom-43-attribute_value=&attributes_custom-43-attribute_id=&attributes_custom-43-attribute_exists=y&attributes_custom-44-attribute_name=&attributes_custom-44-attribute_value=&attributes_custom-44-attribute_id=&attributes_custom-44-attribute_exists=y&attributes_custom-45-attribute_name=&attributes_custom-45-attribute_value=&attributes_custom-45-attribute_id=&attributes_custom-45-attribute_exists=y&attributes_custom-46-attribute_name=&attributes_custom-46-attribute_value=&attributes_custom-46-attribute_id=&attributes_custom-46-attribute_exists=y&attributes_custom-47-attribute_name=&attributes_custom-47-attribute_value=&attributes_custom-47-attribute_id=&attributes_custom-47-attribute_exists=y&attributes_custom-48-attribute_name=&attributes_custom-48-attribute_value=&attributes_custom-48-attribute_id=&attributes_custom-48-attribute_exists=y&attributes_custom-49-attribute_name=&attributes_custom-49-attribute_value=&attributes_custom-49-attribute_id=&attributes_custom-49-attribute_exists=y&attributes_custom-50-attribute_name=&attributes_custom-50-attribute_value=&attributes_custom-50-attribute_id=&attributes_custom-50-attribute_exists=y&attributes_custom-51-attribute_name=&attributes_custom-51-attribute_value=&attributes_custom-51-attribute_id=&attributes_custom-51-attribute_exists=y&attributes_custom-52-attribute_name=&attributes_custom-52-attribute_value=&attributes_custom-52-attribute_id=&attributes_custom-52-attribute_exists=y&attributes_custom-53-attribute_name=&attributes_custom-53-attribute_value=&attributes_custom-53-attribute_id=&attributes_custom-53-attribute_exists=y&attributes_custom-54-attribute_name=&attributes_custom-54-attribute_value=&attributes_custom-54-attribute_id=&attributes_custom-54-attribute_exists=y&attributes_custom-55-attribute_name=&attributes_custom-55-attribute_value=&attributes_custom-55-attribute_id=&attributes_custom-55-attribute_exists=y&attributes_custom-56-attribute_name=&attributes_custom-56-attribute_value=&attributes_custom-56-attribute_id=&attributes_custom-56-attribute_exists=y&attributes_custom-57-attribute_name=&attributes_custom-57-attribute_value=&attributes_custom-57-attribute_id=&attributes_custom-57-attribute_exists=y&attributes_custom-58-attribute_name=&attributes_custom-58-attribute_value=&attributes_custom-58-attribute_id=&attributes_custom-58-attribute_exists=y&attributes_custom-59-attribute_name=&attributes_custom-59-attribute_value=&attributes_custom-59-attribute_id=&attributes_custom-59-attribute_exists=y&attributes_custom-60-attribute_name=&attributes_custom-60-attribute_value=&attributes_custom-60-attribute_id=&attributes_custom-60-attribute_exists=y&attributes_custom-61-attribute_name=&attributes_custom-61-attribute_value=&attributes_custom-61-attribute_id=&attributes_custom-61-attribute_exists=y&attributes_custom-62-attribute_name=&attributes_custom-62-attribute_value=&attributes_custom-62-attribute_id=&attributes_custom-62-attribute_exists=y&attributes_custom-63-attribute_name=&attributes_custom-63-attribute_value=&attributes_custom-63-attribute_id=&attributes_custom-63-attribute_exists=y&attributes_custom-64-attribute_name=&attributes_custom-64-attribute_value=&attributes_custom-64-attribute_id=&attributes_custom-64-attribute_exists=y&attributes_custom-65-attribute_name=&attributes_custom-65-attribute_value=&attributes_custom-65-attribute_id=&attributes_custom-65-attribute_exists=y&attributes_custom-66-attribute_name=&attributes_custom-66-attribute_value=&attributes_custom-66-attribute_id=&attributes_custom-66-attribute_exists=y&attributes_custom-67-attribute_name=&attributes_custom-67-attribute_value=&attributes_custom-67-attribute_id=&attributes_custom-67-attribute_exists=y&attributes_custom-68-attribute_name=&attributes_custom-68-attribute_value=&attributes_custom-68-attribute_id=&attributes_custom-68-attribute_exists=y&attributes_custom-69-attribute_name=&attributes_custom-69-attribute_value=&attributes_custom-69-attribute_id=&attributes_custom-69-attribute_exists=y&use_default_seo_settings=1&packaging=&ajax_create=true&status=0&redirect_to_list=true";
             return str;
         }
