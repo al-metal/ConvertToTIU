@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 16; globalCategory.Count > i; i++)
+            for (int i = 17; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -420,6 +420,9 @@ namespace ConvertToTIU
                 case 16:
                     idCategory = "120306";
                     break;
+                case 17:
+                    idCategory = "1250316";
+                    break;
                 default:
                     break;
             }
@@ -660,6 +663,9 @@ namespace ConvertToTIU
                 idGroupTIU = "17980518";
             else if (categoryForTIU == "Снегоходы Stels")
                 idGroupTIU = "17980519";
+
+            else if (categoryForTIU == "Снегоуборщики")
+                idGroupTIU = "17245598";
 
             else
             {
