@@ -122,7 +122,7 @@ namespace ConvertToTIU
             MatchCollection globalCategory = new Regex("(?<=<div class=\"category-capt-txt -text-center\"><a href=\").*?(?=\" class=\"blue\">)").Matches(otv);
             MatchCollection nameGlobalCategory = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div>)").Matches(otv);
 
-            for (int i = 15; globalCategory.Count > i; i++)
+            for (int i = 16; globalCategory.Count > i; i++)
             {
                 Thread.Sleep(10000);
                 string categoryForTIU = /*"1 " +*/ nameGlobalCategory[i].ToString();
@@ -144,8 +144,8 @@ namespace ConvertToTIU
                     {
                         categoryForTIU = /*"1 " + */podCategoryName[l].ToString();
 
-                        /*if (categoryForTIU != "Дорожные новые" && categoryForTIU != "Кроссовые новые" && categoryForTIU != "Эндуро новые" && categoryForTIU != "Мотард новые" && categoryForTIU != "Спортивные новые" && categoryForTIU != "Чопперы, круизеры новые" && categoryForTIU != "Трициклы и грузовые мотоциклы")
-                            continue;*/
+                        if (categoryForTIU != "Снегоходы новые (Китай, Россия)" && categoryForTIU != "Снегоходы и аксессуары ALPINA SHERPA" && categoryForTIU != "Снегоходы Stels")
+                            continue;
 
                         otv = webRequest.getRequest("https://bike18.ru" + podCategoryURL[l].ToString() + "?page=all");
                         MatchCollection category2Name = new Regex("(?<=\" class=\"blue\">).*?(?=</a></div></div></div>)").Matches(otv);
@@ -417,6 +417,9 @@ namespace ConvertToTIU
                 case 15:
                     idCategory = "120308";
                     break;
+                case 16:
+                    idCategory = "120306";
+                    break;
                 default:
                     break;
             }
@@ -650,6 +653,13 @@ namespace ConvertToTIU
                 idGroupTIU = "17975381";
             else if (categoryForTIU == "Мотобуксировщики ЮКОН")
                 idGroupTIU = "17975382";
+
+            else if (categoryForTIU == "Снегоходы новые (Китай, Россия)")
+                idGroupTIU = "17980517";
+            else if (categoryForTIU == "Снегоходы и аксессуары ALPINA SHERPA")
+                idGroupTIU = "17980518";
+            else if (categoryForTIU == "Снегоходы Stels")
+                idGroupTIU = "17980519";
 
             else
             {
